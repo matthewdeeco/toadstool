@@ -1,34 +1,24 @@
-import React, { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import './App.scss';
+import { Router, Switch, Route } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+import Hero from './HeroPage';
+import HeroList from './HeroList';
 
-interface Hero {
-  id: number;
-  localized_name: string;
+
+const history = createBrowserHistory();
+
+export default function App() {
+  return (
+    <Router history={history}>
+      <Switch>
+        <Route exact path="/">
+          <HeroList />
+        </Route>
+        <Route path="/heroes/:heroId">
+          <Hero />
+        </Route>
+      </Switch>
+    </Router>
+  );
 }
-
-class App extends React.Component<{}, {heroes: Hero[]}> {
-
-  componentWillMount() {
-    fetch('https://api.opendota.com/api/heroes').then((val) => {
-      val.json().then((heroes) => {
-        console.log(heroes);
-        this.setState({
-          heroes,
-        });
-      });
-    });
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          {this.state?.heroes.map(hero => <p key={hero.id}>{hero.localized_name}</p>)}
-        </header>
-      </div>
-    );
-  }
-}
-
-export default App;
