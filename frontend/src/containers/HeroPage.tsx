@@ -9,7 +9,7 @@ export default function HeroPage() {
   const [items, setItems] = useState([] as Item[]);
 
   useEffect(() => {
-    Axios.get<Item[]>(`https://api.opendota.com/api/constants/heroes/${heroId}/itemPopularity`).then(resp => {
+    Axios.get<Item[]>(`https://api.opendota.com/api/heroes/${heroId}/itemPopularity`).then(resp => {
       setItems(resp.data);
     })
   }, [heroId]);
@@ -17,7 +17,7 @@ export default function HeroPage() {
   return (
     <div>
       <h1>{heroId}</h1>
-      {items.toString()}
+      {JSON.stringify(items)}
     </div>
   );
 }

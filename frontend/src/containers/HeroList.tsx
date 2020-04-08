@@ -15,8 +15,6 @@ export default function HeroList() {
   useEffect(() => {
     Axios.get<Hero[]>('https://api.opendota.com/api/constants/heroes').then((resp) => {
       setHeroes(Object.values(resp.data).sort((hero1, hero2) => (hero1.localized_name < hero2.localized_name) ? -1 : 1))
-    }).catch((error) => {
-      console.log('error', error);
     });
   }, []);
 
@@ -27,9 +25,17 @@ export default function HeroList() {
           <Link
             to={`/heroes/${hero.id}`}
             key={hero.id}
+            style={{position: 'relative', flex: '0 1 auto', display: 'inline-flex'}}
           >
-            <img alt={hero.localized_name} src={'https://api.opendota.com' + hero.img}></img>
-            {hero.id} {hero.localized_name}
+            <img alt={hero.localized_name} src={'https://api.opendota.com' + hero.img} style={{width: '128px', height: '72px'}}></img>
+            <span style={{
+              position: 'absolute',
+              left: '0.25rem',
+              bottom: '0.25rem',
+              color: 'white',
+              textShadow: '0px 0px 4px #0a0a0a',
+              fontSize: '13px',
+            }}>{hero.localized_name}</span>
           </Link>)}
       </header>
     </div>
