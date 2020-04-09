@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import { useDispatch, connect } from 'react-redux';
-import { fetchHeroes } from '../actions';
+import { loadHeroes } from '../actions';
 
 interface Hero {
   id: number;
@@ -12,12 +12,10 @@ interface Hero {
 }
 
 const HeroList = ({ heroes }: { heroes: Hero[]}) => {
-  console.log('heroes', heroes);
-  // const [heroes, setHeroes] = useState([] as Hero[]);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchHeroes());
+    dispatch(loadHeroes());
   }, [dispatch]);
 
   return (
@@ -49,6 +47,5 @@ const mapStateToProps = (state: any) => {
     heroes: state.heroes
   }
 }
-
 
 export default connect(mapStateToProps)(HeroList);
