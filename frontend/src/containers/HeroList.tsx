@@ -9,10 +9,7 @@ const HeroListContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  color: white;
   justify-content: center;
-  max-width: 972px;
-  margin: 0 auto;
 `;
 
 const HeroList = ({ heroes }: { heroes: Hero[]}) => {
