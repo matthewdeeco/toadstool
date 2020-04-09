@@ -1,10 +1,10 @@
 import React from 'react';
-import './App.scss';
-import { Router, Switch, Route } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
+import { Route, Router, Switch } from 'react-router-dom';
+
 import Hero from './containers/HeroPage';
 import HeroList from './containers/HeroList';
-
+import './App.scss';
 
 const history = createBrowserHistory();
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
+import { useDispatch, connect } from 'react-redux';
+import { fetchHeroes } from '../actions';
 
 interface Hero {
   id: number;
@@ -9,19 +11,19 @@ interface Hero {
   icon: FunctionStringCallback;
 }
 
-export default function HeroList() {
-  const [heroes, setHeroes] = useState([] as Hero[]);
+const HeroList = ({ heroes }: { heroes: Hero[]}) => {
+  console.log('heroes', heroes);
+  // const [heroes, setHeroes] = useState([] as Hero[]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    Axios.get<Hero[]>('https://api.opendota.com/api/constants/heroes').then((resp) => {
-      setHeroes(Object.values(resp.data).sort((hero1, hero2) => (hero1.localized_name < hero2.localized_name) ? -1 : 1))
-    });
-  }, []);
+    dispatch(fetchHeroes());
+  }, [dispatch]);
 
   return (
     <div className="App">
       <header className="App-header">
-        {heroes.map(hero =>
+        {heroes?.map(hero =>
           <Link
             to={`/heroes/${hero.id}`}
             key={hero.id}
@@ -40,4 +42,13 @@ export default function HeroList() {
       </header>
     </div>
   );
+};
+
+const mapStateToProps = (state: any) => {
+  return {
+    heroes: state.heroes
+  }
 }
+
+
+export default connect(mapStateToProps)(HeroList);
