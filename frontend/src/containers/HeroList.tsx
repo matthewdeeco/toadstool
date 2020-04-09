@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Axios from 'axios';
 import { useDispatch, connect } from 'react-redux';
 import { loadHeroes } from '../actions';
-
-interface Hero {
-  id: number;
-  localized_name: string;
-  img: string;
-  icon: FunctionStringCallback;
-}
+import { RootState } from 'typesafe-actions';
+import { Hero } from '../models/hero';
 
 const HeroList = ({ heroes }: { heroes: Hero[]}) => {
   const dispatch = useDispatch();
@@ -42,7 +36,7 @@ const HeroList = ({ heroes }: { heroes: Hero[]}) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: RootState) => {
   return {
     heroes: state.heroes
   }
