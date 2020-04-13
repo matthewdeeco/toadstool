@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
 import { Hero } from '../models/hero';
+
 import HeroAvatar from './HeroAvatar';
 
 const HeroLink = styled(Link)`

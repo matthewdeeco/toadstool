@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
 import { createBrowserHistory } from 'history';
-import { Route, Router, Switch, Redirect } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { Route, Router, Switch, Redirect } from 'react-router-dom';
 
-import Hero from './containers/HeroPage';
-import HeroList from './containers/HeroList';
 import { loadHeroes } from './actions';
+import HeroList from './containers/HeroList';
+import Hero from './containers/HeroPage';
+
 import './App.scss';
 import styled from 'styled-components';
 

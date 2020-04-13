@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.scss';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-import { Provider } from 'react-redux';
-import toadstoolApp from './reducers';
 
-import thunk from 'redux-thunk';
-import { createLogger } from 'redux-logger';
+import './index.scss';
+import { Provider } from 'react-redux';
 import { createStore, Middleware, applyMiddleware } from 'redux';
+import { createLogger } from 'redux-logger';
+import thunk from 'redux-thunk';
+
+import App from './App';
+import toadstoolApp from './reducers';
+import * as serviceWorker from './serviceWorker';
+
 
 const middleware: Middleware[] = [thunk];
 if (process.env.NODE_ENV !== 'production') {
@@ -16,14 +18,13 @@ if (process.env.NODE_ENV !== 'production') {
 }
 const store = createStore(toadstoolApp, applyMiddleware(...middleware));
 
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <App />
     </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change

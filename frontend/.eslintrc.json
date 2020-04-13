@@ -1,0 +1,31 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended", 
+    "prettier", 
+    "prettier/react", 
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
+  ],
+  "rules": {
+    "import/order": [
+      "error", 
+      {
+        "groups": ["builtin", "external", "parent", "sibling", "index"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": false
+        }
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "varsIgnorePattern": "React" }
+    ]
+  }
+}

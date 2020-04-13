@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { RootState } from 'typesafe-actions';
-import { Hero } from '../models/hero';
-import HeroCard from '../components/HeroCard';
 import styled from 'styled-components';
+import { RootState } from 'typesafe-actions';
+
+import HeroCard from '../components/HeroCard';
+import { Hero } from '../models/hero';
 
 const HeroListContainer = styled.div`
   display: flex;
@@ -12,18 +13,20 @@ const HeroListContainer = styled.div`
   justify-content: center;
 `;
 
-const HeroList = ({ heroes }: { heroes: Hero[]}) => {
+const HeroList = ({ heroes }: { heroes: Hero[] }) => {
   return (
     <HeroListContainer>
-      {heroes?.map(hero => <HeroCard key={hero.id} hero={hero}></HeroCard>)}
+      {heroes?.map((hero) => (
+        <HeroCard key={hero.id} hero={hero}></HeroCard>
+      ))}
     </HeroListContainer>
   );
 };
 
 const mapStateToProps = (state: RootState) => {
   return {
-    heroes: state.heroes
-  }
-}
+    heroes: state.heroes,
+  };
+};
 
 export default connect(mapStateToProps)(HeroList);

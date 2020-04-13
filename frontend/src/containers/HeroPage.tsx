@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, RouteComponentProps } from "react-router-dom";
 import Axios from 'axios';
-import { RootState } from 'typesafe-actions';
+import React, { useState, useEffect } from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { Hero } from '../models/hero';
-import HeroAvatar from '../components/HeroAvatar';
+import { useParams, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
+import { RootState } from 'typesafe-actions';
+
+import HeroAvatar from '../components/HeroAvatar';
+import { Hero } from '../models/hero';
+
 
 type Item = unknown;
 
@@ -19,16 +21,18 @@ const HeroTitle = styled.div`
 const HeroName = styled.div`
   font-size: 2rem;
   font-weight: bold;
-`
+`;
 
 const HeroPage = ({ hero }: { hero?: Hero }) => {
   const { heroId } = useParams();
   const [items, setItems] = useState([] as Item[]);
 
   useEffect(() => {
-    Axios.get<Item[]>(`https://api.opendota.com/api/heroes/${heroId}/itemPopularity`).then(resp => {
+    Axios.get<Item[]>(
+      `https://api.opendota.com/api/heroes/${heroId}/itemPopularity`,
+    ).then((resp) => {
       setItems(resp.data);
-    })
+    });
   }, [heroId]);
 
   if (!hero) {
@@ -44,15 +48,18 @@ const HeroPage = ({ hero }: { hero?: Hero }) => {
           <div>{hero.roles.join(', ')}</div>
         </HeroTitle>
       </div>
-      <div style={{wordBreak: 'break-all'}}>{JSON.stringify(hero)}</div>
+      <div style={{ wordBreak: 'break-all' }}>{JSON.stringify(hero)}</div>
     </div>
   );
 };
 
-const mapStateToProps = (state: RootState, ownProps: RouteComponentProps<{ heroId: string }>) => {
+const mapStateToProps = (
+  state: RootState,
+  ownProps: RouteComponentProps<{ heroId: string }>,
+) => {
   const heroId = Number(ownProps?.match.params.heroId);
   return {
-    hero: state.heroes.find(hero => hero.id === heroId),
+    hero: state.heroes.find((hero) => hero.id === heroId),
   };
 };
 
