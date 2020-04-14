@@ -8,7 +8,6 @@ import { RootState } from 'typesafe-actions';
 import HeroAvatar from '../components/HeroAvatar';
 import { Hero } from '../models/hero';
 
-
 type Item = unknown;
 
 const HeroTitle = styled.div`

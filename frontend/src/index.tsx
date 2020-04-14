@@ -11,7 +11,6 @@ import App from './App';
 import toadstoolApp from './reducers';
 import * as serviceWorker from './serviceWorker';
 
-
 const middleware: Middleware[] = [thunk];
 if (process.env.NODE_ENV !== 'production') {
   middleware.push(createLogger());

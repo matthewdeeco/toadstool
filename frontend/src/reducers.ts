@@ -4,7 +4,6 @@ import { createReducer } from 'typesafe-actions';
 import * as actions from './actions';
 import { Hero } from './models/hero';
 
-
 const heroesReducer = createReducer([] as Hero[]).handleAction(
   actions.LOAD_HEROES.success,
   (state, action) =>

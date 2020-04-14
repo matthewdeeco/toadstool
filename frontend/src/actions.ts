@@ -4,7 +4,6 @@ import { createAsyncAction } from 'typesafe-actions';
 
 import { Hero } from './models/hero';
 
-
 export const LOAD_HEROES = createAsyncAction(
   'LOAD_HEROES_REQUEST',
   'LOAD_HEROES_SUCCESS',
