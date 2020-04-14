@@ -1,12 +1,13 @@
 import Axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useParams, RouteComponentProps } from 'react-router-dom';
+import { useParams, RouteComponentProps, } from 'react-router-dom';
 import styled from 'styled-components';
 import { RootState } from 'typesafe-actions';
 
 import HeroAvatar from '../components/HeroAvatar';
 import { Hero } from '../models/hero';
+import dashify from 'dashify';
 
 type Item = unknown;
 
@@ -22,7 +23,15 @@ const HeroName = styled.div`
   font-weight: bold;
 `;
 
-const HeroPage = ({ hero }: { hero?: Hero }) => {
+const DotabuffLink = styled.a`
+  margin: 1rem 0;
+  display: inline-block;
+  img {
+    width: 128px;
+  }
+`;
+
+const HeroPage: React.FC<{ hero?: Hero }> = ({ hero }) => {
   const { heroId } = useParams();
   const [, setItems] = useState([] as Item[]);
 
@@ -44,10 +53,13 @@ const HeroPage = ({ hero }: { hero?: Hero }) => {
         <HeroAvatar name={hero.localized_name} url={hero.img}></HeroAvatar>
         <HeroTitle>
           <HeroName>{hero.localized_name}</HeroName>
-          <div>{hero.roles.join(', ')}</div>
+          <div>{hero.attack_type} - {hero.roles.join(', ')}</div>
         </HeroTitle>
       </div>
       <div style={{ wordBreak: 'break-all' }}>{JSON.stringify(hero)}</div>
+      <DotabuffLink target="_blank" href={`https://dotabuff.com/heroes/${dashify(hero.localized_name.replace("'", ''))}`}>
+        <img src="https://miro.medium.com/max/332/1*L7bUVdusS37qo_Gr2qEbKw.png" />
+      </DotabuffLink>
     </div>
   );
 };

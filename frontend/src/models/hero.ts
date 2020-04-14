@@ -4,4 +4,5 @@ export interface Hero {
   img: string;
   icon: string;
   roles: string[];
+  attack_type: string;
 }
