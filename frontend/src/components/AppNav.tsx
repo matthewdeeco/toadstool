@@ -1,12 +1,13 @@
-import { NavLink } from "react-router-dom";
 import React from 'react';
-import styled from "styled-components";
-import { SCREEN_MD_MAX } from "../constants/breakpoints";
+import { NavLink } from 'react-router-dom';
+import styled from 'styled-components';
+
+import { SCREEN_MD_MAX } from '../constants/breakpoints';
 
 const navbarItemHeight = '2rem';
 
 const Container = styled.div`
-  background-color: #242F39;
+  background-color: #242f39;
   position: relative;
   color: white;
 `;
@@ -21,7 +22,7 @@ const NavLinkContainer = styled.div`
   margin: 0 auto;
 `;
 
-const NavLinkStyled = styled(NavLink)`
+const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   height: ${navbarItemHeight};
   padding: 0.5rem 0.75rem 0;
@@ -30,11 +31,12 @@ const NavLinkStyled = styled(NavLink)`
   border-radius: 0.5rem 0.5rem 0 0;
   color: white;
   &.active {
-    background-color: #2E3740;
+    background-color: #2e3740;
   }
   &:not(.active) {
-    &:hover, &:focus {
-      color: #39CCCC;
+    &:hover,
+    &:focus {
+      color: #39cccc;
     }
   }
 `;
@@ -43,8 +45,8 @@ export const AppNav = () => {
   return (
     <Container>
       <NavLinkContainer>
-        <NavLinkStyled to="/heroes">Heroes</NavLinkStyled>
-        <NavLinkStyled to="/hero-pool">Hero Pool Suggestion</NavLinkStyled>
+        <StyledNavLink to="/heroes">Heroes</StyledNavLink>
+        <StyledNavLink to="/hero-pool">Hero Pool Suggestion</StyledNavLink>
       </NavLinkContainer>
     </Container>
   );

@@ -24,7 +24,7 @@ const HeroName = styled.div`
 
 const HeroPage = ({ hero }: { hero?: Hero }) => {
   const { heroId } = useParams();
-  const [items, setItems] = useState([] as Item[]);
+  const [, setItems] = useState([] as Item[]);
 
   useEffect(() => {
     Axios.get<Item[]>(

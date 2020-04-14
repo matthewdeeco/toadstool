@@ -1,16 +1,16 @@
 import { createBrowserHistory } from 'history';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Route, Router, Switch, Redirect, NavLink } from 'react-router-dom';
+import { Route, Router, Switch, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { loadHeroes } from './actions';
+import { AppNav } from './components/AppNav';
+import { SCREEN_MD_MAX } from './constants/breakpoints';
 import HeroList from './containers/HeroList';
 import Hero from './containers/HeroPage';
 
 import './App.scss';
-import { AppNav } from './components/AppNav';
-import { SCREEN_MD_MAX } from './constants/breakpoints';
 
 const history = createBrowserHistory();
 
@@ -18,6 +18,7 @@ const PageContainer = styled.div`
   color: white;
   max-width: ${SCREEN_MD_MAX};
   margin: 2rem auto;
+  overflow-y: auto;
 `;
 
 export default function App() {
@@ -29,7 +30,7 @@ export default function App() {
 
   return (
     <Router history={history}>
-      <AppNav/>
+      <AppNav />
       <PageContainer>
         <Switch>
           <Route path="/" exact>
