@@ -2,13 +2,13 @@ import { createBrowserHistory } from 'history';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Route, Router, Switch, Redirect } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { loadHeroes } from './actions';
 import HeroList from './containers/HeroList';
 import Hero from './containers/HeroPage';
 
 import './App.scss';
-import styled from 'styled-components';
 
 const history = createBrowserHistory();
 

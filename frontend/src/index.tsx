@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import './index.scss';
 import { Provider } from 'react-redux';
 import { createStore, Middleware, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
@@ -10,6 +8,8 @@ import thunk from 'redux-thunk';
 import App from './App';
 import toadstoolApp from './reducers';
 import * as serviceWorker from './serviceWorker';
+
+import './index.scss';
 
 const middleware: Middleware[] = [thunk];
 if (process.env.NODE_ENV !== 'production') {
