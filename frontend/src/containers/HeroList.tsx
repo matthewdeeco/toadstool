@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { RootState } from 'typesafe-actions';
 
@@ -14,10 +15,15 @@ const HeroListContainer = styled.div`
 `;
 
 const HeroList = ({ heroes }: { heroes: Hero[] }) => {
+  const history = useHistory();
   return (
     <HeroListContainer>
       {heroes?.map((hero) => (
-        <HeroCard key={hero.id} hero={hero}></HeroCard>
+        <HeroCard
+          key={hero.id}
+          hero={hero}
+          onClick={(hero: Hero) => history.push(`/heroes/${hero.id}`)}
+        ></HeroCard>
       ))}
     </HeroListContainer>
   );

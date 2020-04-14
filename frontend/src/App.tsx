@@ -14,11 +14,15 @@ import './App.scss';
 
 const history = createBrowserHistory();
 
+const ScrollContainer = styled.div`
+  overflow-y: auto;
+`;
+
 const PageContainer = styled.div`
   color: white;
   max-width: ${SCREEN_MD_MAX};
-  margin: 2rem auto;
-  overflow-y: auto;
+  margin: 0 auto;
+  padding: 2rem 0;
 `;
 
 export default function App() {
@@ -31,15 +35,17 @@ export default function App() {
   return (
     <Router history={history}>
       <AppNav />
-      <PageContainer>
-        <Switch>
-          <Route path="/" exact>
-            <Redirect to="/heroes" />
-          </Route>
-          <Route path="/heroes" exact component={HeroList}></Route>
-          <Route path="/heroes/:heroId" component={Hero}></Route>
-        </Switch>
-      </PageContainer>
+      <ScrollContainer>
+        <PageContainer>
+          <Switch>
+            <Route path="/" exact>
+              <Redirect to="/heroes" />
+            </Route>
+            <Route path="/heroes" exact component={HeroList}></Route>
+            <Route path="/heroes/:heroId" component={Hero}></Route>
+          </Switch>
+        </PageContainer>
+      </ScrollContainer>
     </Router>
   );
 }

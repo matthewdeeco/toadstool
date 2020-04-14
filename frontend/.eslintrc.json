@@ -25,6 +25,7 @@
       }
     ],
     "@typescript-eslint/explicit-function-return-type": ["off"],
-    "autofix/no-unused-vars": ["error", { "varsIgnorePattern": "React" }]
+    "autofix/no-unused-vars": ["error", { "varsIgnorePattern": "React" }],
+    "react/prop-types": ["off"]
   }
 }

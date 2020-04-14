@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Hero } from '../models/hero';
 
 import HeroAvatar from './HeroAvatar';
 
-const HeroLink = styled(Link)`
+const HeroLink = styled.div`
   position: relative;
   flex: 0 1 auto;
   display: inline-flex;
   margin: 2px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const HeroName = styled.span`
@@ -33,13 +35,15 @@ const HeroMask = styled.div`
   z-index: 1;
 `;
 
-const HeroCard = ({ hero, className }: { hero: Hero, className?: string }) => {
+const HeroCard: React.FC<{ hero: Hero; onClick: (hero: Hero) => void }> = ({
+  hero,
+  onClick,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <HeroLink
-      to={`/heroes/${hero.id}`}
-      className={className}
+      onClick={() => onClick(hero)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
