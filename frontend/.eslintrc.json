@@ -1,19 +1,20 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "autofix"],
   "extends": [
-    "eslint:recommended", 
-    "prettier", 
-    "prettier/react", 
+    "eslint:recommended",
+    "prettier",
+    "prettier/react",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "plugin:import/typescript"
+    "plugin:import/typescript",
+    "plugin:react/recommended"
   ],
   "rules": {
     "import/order": [
-      "error", 
+      "error",
       {
         "groups": ["builtin", "external", "parent", "sibling", "index"],
         "newlines-between": "always",
@@ -23,9 +24,6 @@
         }
       }
     ],
-    "@typescript-eslint/no-unused-vars": [
-      "warn",
-      { "varsIgnorePattern": "React" }
-    ]
+    "@typescript-eslint/explicit-function-return-type": ["off"]
   }
 }

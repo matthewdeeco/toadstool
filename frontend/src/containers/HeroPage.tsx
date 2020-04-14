@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { useParams, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { RootState } from 'typesafe-actions';
