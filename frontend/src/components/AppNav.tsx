@@ -46,7 +46,7 @@ export const AppNav = () => {
     <Container>
       <NavLinkContainer>
         <StyledNavLink to="/heroes">Heroes</StyledNavLink>
-        <StyledNavLink to="/hero-pool">Hero Pool Suggestion</StyledNavLink>
+        <StyledNavLink to="/hero-pool">Hero Pool Suggester</StyledNavLink>
       </NavLinkContainer>
     </Container>
   );
