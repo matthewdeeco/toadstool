@@ -20,7 +20,7 @@ function mapStateToProps(
 }
 
 const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 type HeroPageProps = PropsFromRedux & {};
 
 const HeroTitle = styled.div`
@@ -49,11 +49,7 @@ const DotabuffLink = styled.a`
   }
 `;
 
-const HeroPage: React.FC<HeroPageProps> = ({
-  hero,
-  heroes,
-  matchups,
-}) => {
+const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
   const { heroId } = useParams();
   const dispatch = useDispatch();
 
@@ -84,21 +80,24 @@ const HeroPage: React.FC<HeroPageProps> = ({
           <table>
             <thead>
               <tr>
-                <th colSpan={2} align="left">Hero</th>
+                <th colSpan={2} align="left">
+                  Hero
+                </th>
                 <th>Disadvantage</th>
                 <th>Matches Played</th>
                 <th>Win Rate</th>
               </tr>
             </thead>
             <tbody>
-              {matchups.map(heroMatchup => (
+              {matchups.map((heroMatchup) => (
                 <tr key={heroMatchup.heroId}>
                   <td>
-                    <HeroMatchupAvatar alt="" src={heroes[heroMatchup.heroId].imageUrl} />
+                    <HeroMatchupAvatar
+                      alt=""
+                      src={heroes[heroMatchup.heroId].imageUrl}
+                    />
                   </td>
-                  <td>
-                    {heroes[heroMatchup.heroId].name}
-                  </td>
+                  <td>{heroes[heroMatchup.heroId].name}</td>
                   <td style={{ textAlign: 'right' }}>
                     {heroMatchup.disadvantage.toFixed(2)}%
                   </td>

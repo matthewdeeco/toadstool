@@ -15,7 +15,7 @@ function mapStateToProps(state: RootState) {
 }
 
 const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 type HeroListProps = PropsFromRedux & {};
 
 const HeroListContainer = styled.div`
