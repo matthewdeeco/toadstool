@@ -57,34 +57,36 @@ const HeroPage: React.FC<{ hero?: Hero; heroMatchups?: HeroMatchup[] }> = ({
           </div>
         </HeroTitle>
       </div>
-      <h2>Matchups</h2>
-      {heroMatchups && (
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Disadvantage</th>
-              <th>Matches Played</th>
-              <th>Win Rate</th>
-            </tr>
-          </thead>
-          <tbody>
-            {heroMatchups.map((heroMatchup) => (
-              <tr key={heroMatchup.name}>
-                <td>{heroMatchup.name}</td>
-                <td style={{ textAlign: 'right' }}>
-                  {heroMatchup.disadvantage.toFixed(2)}%
-                </td>
-                <td style={{ textAlign: 'right' }}>
-                  {heroMatchup.matchesPlayed.toLocaleString()}
-                </td>
-                <td style={{ textAlign: 'right' }}>
-                  {heroMatchup.winRate.toFixed(1)}%
-                </td>
+      {heroMatchups && heroMatchups.length > 0 && (
+        <div>
+          <h2>Matchups</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Disadvantage</th>
+                <th>Matches Played</th>
+                <th>Win Rate</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {heroMatchups.map((heroMatchup) => (
+                <tr key={heroMatchup.name}>
+                  <td>{heroMatchup.name}</td>
+                  <td style={{ textAlign: 'right' }}>
+                    {heroMatchup.disadvantage.toFixed(2)}%
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    {heroMatchup.matchesPlayed.toLocaleString()}
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    {heroMatchup.winRate.toFixed(1)}%
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
       <div style={{ wordBreak: 'break-all' }}>{JSON.stringify(hero)}</div>
       <DotabuffLink
