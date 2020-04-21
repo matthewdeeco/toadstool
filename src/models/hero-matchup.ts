@@ -1,5 +1,7 @@
+import { Hero } from "./hero";
+
 export interface HeroMatchup {
-  name: string;
+  heroId: Hero['id'];
   disadvantage: number;
   winRate: number;
   matchesPlayed: number;

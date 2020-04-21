@@ -9,10 +9,14 @@ headers = {
     "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36",
 }
 
+def kebab_case(s: str):
+  return s.lower().replace(" ", "-").replace("'", "")
+
+
 def get_hero_matchup_data(hero_name: str):
   resp = requests.get(f"https://www.dotabuff.com/heroes/{hero_name}/counters", headers=headers)
 
-  soup = BeautifulSoup(resp.content)
+  soup = BeautifulSoup(resp.content, "html.parser")
 
   matchups = soup.find_all("section")[4]
 
@@ -22,8 +26,9 @@ def get_hero_matchup_data(hero_name: str):
 
   for hero_row in matchups.find("tbody").find_all("tr"):
     hero_cells = hero_row.find_all("td")
+    hero_name = hero_cells[0].attrs["data-value"]
     hero_data = {
-      "name": hero_cells[0].attrs["data-value"],
+      "heroId": kebab_case(hero_name),
       "disadvantage": float(hero_cells[2].attrs["data-value"]),
       "winRate": float(hero_cells[3].attrs["data-value"]),
       "matchesPlayed": float(hero_cells[4].attrs["data-value"]),

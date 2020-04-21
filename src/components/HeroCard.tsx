@@ -47,7 +47,7 @@ const HeroCard: React.FC<{ hero: Hero; onClick: (hero: Hero) => void }> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <HeroAvatar name={hero.name} url={hero.imageUrl}></HeroAvatar>
+      <HeroAvatar name={hero.name} imageUrl={hero.imageUrl}></HeroAvatar>
       <HeroName>{hero.name}</HeroName>
       {isHovered && <HeroMask />}
     </HeroLink>

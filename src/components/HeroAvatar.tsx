@@ -6,8 +6,8 @@ const Image = styled.img`
   height: 72px;
 `;
 
-const HeroAvatar = ({ name, url }: { name: string; url: string }) => {
-  return <Image alt={name} src={`https://api.opendota.com${url}`}></Image>;
+const HeroAvatar = ({ name, imageUrl }: { name: string; imageUrl: string }) => {
+  return <Image alt={name} src={imageUrl}></Image>;
 };
 
 export default HeroAvatar;

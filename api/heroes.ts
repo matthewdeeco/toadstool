@@ -18,8 +18,8 @@ export default (request: NowRequest, response: NowResponse) => {
       .map(hero => ({
         id: dashify(hero.localized_name.replace("'", "")),
         name: hero.localized_name,
-        imageUrl: hero.img,
-        iconUrl: hero.icon,
+        imageUrl: `https://api.opendota.com${hero.img}`,
+        iconUrl: `https://api.opendota.com${hero.icon}`,
         roles: hero.roles,
         attackType: hero.attack_type,
         internalId: hero.id,

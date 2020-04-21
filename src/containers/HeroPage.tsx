@@ -1,13 +1,27 @@
 import React, { useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { connect, useDispatch, ConnectedProps } from 'react-redux';
 import { useParams, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { RootState } from 'typesafe-actions';
 
 import { loadHeroMatchups } from '../actions';
 import HeroAvatar from '../components/HeroAvatar';
-import { Hero } from '../models/hero';
-import { HeroMatchup } from '../models/hero-matchup';
+
+function mapStateToProps(
+  state: RootState,
+  ownProps: RouteComponentProps<{ heroId: string }>,
+) {
+  const heroId = ownProps?.match.params.heroId;
+  return {
+    hero: state.heroes[heroId],
+    heroes: state.heroes,
+    matchups: state.heroMatchups[heroId],
+  };
+}
+
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>
+type HeroPageProps = PropsFromRedux & {};
 
 const HeroTitle = styled.div`
   display: inline-block;
@@ -21,6 +35,12 @@ const HeroName = styled.div`
   font-weight: bold;
 `;
 
+const HeroMatchupAvatar = styled.img`
+  height: 24px;
+  margin-right: 0.5rem;
+  margin-bottom: 4px;
+`;
+
 const DotabuffLink = styled.a`
   margin: 1rem 0;
   display: inline-block;
@@ -29,9 +49,10 @@ const DotabuffLink = styled.a`
   }
 `;
 
-const HeroPage: React.FC<{ hero?: Hero; heroMatchups?: HeroMatchup[] }> = ({
+const HeroPage: React.FC<HeroPageProps> = ({
   hero,
-  heroMatchups,
+  heroes,
+  matchups,
 }) => {
   const { heroId } = useParams();
   const dispatch = useDispatch();
@@ -49,7 +70,7 @@ const HeroPage: React.FC<{ hero?: Hero; heroMatchups?: HeroMatchup[] }> = ({
   return (
     <div>
       <div>
-        <HeroAvatar name={hero.name} url={hero.imageUrl}></HeroAvatar>
+        <HeroAvatar name={hero.name} imageUrl={hero.imageUrl}></HeroAvatar>
         <HeroTitle>
           <HeroName>{hero.name}</HeroName>
           <div>
@@ -57,22 +78,27 @@ const HeroPage: React.FC<{ hero?: Hero; heroMatchups?: HeroMatchup[] }> = ({
           </div>
         </HeroTitle>
       </div>
-      {heroMatchups && heroMatchups.length > 0 && (
+      {matchups && matchups.length > 0 && (
         <div>
           <h2>Matchups</h2>
           <table>
             <thead>
               <tr>
-                <th>Name</th>
+                <th colSpan={2} align="left">Hero</th>
                 <th>Disadvantage</th>
                 <th>Matches Played</th>
                 <th>Win Rate</th>
               </tr>
             </thead>
             <tbody>
-              {heroMatchups.map((heroMatchup) => (
-                <tr key={heroMatchup.name}>
-                  <td>{heroMatchup.name}</td>
+              {matchups.map(heroMatchup => (
+                <tr key={heroMatchup.heroId}>
+                  <td>
+                    <HeroMatchupAvatar alt="" src={heroes[heroMatchup.heroId].imageUrl} />
+                  </td>
+                  <td>
+                    {heroes[heroMatchup.heroId].name}
+                  </td>
                   <td style={{ textAlign: 'right' }}>
                     {heroMatchup.disadvantage.toFixed(2)}%
                   </td>
@@ -102,15 +128,4 @@ const HeroPage: React.FC<{ hero?: Hero; heroMatchups?: HeroMatchup[] }> = ({
   );
 };
 
-const mapStateToProps = (
-  state: RootState,
-  ownProps: RouteComponentProps<{ heroId: string }>,
-) => {
-  const heroId = ownProps?.match.params.heroId;
-  return {
-    hero: state.heroes.find((hero) => hero.id === heroId),
-    heroMatchups: state.heroMatchups[heroId],
-  };
-};
-
-export default connect(mapStateToProps)(HeroPage);
+export default connector(HeroPage);
