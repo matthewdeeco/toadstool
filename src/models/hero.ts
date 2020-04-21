@@ -1,8 +1,8 @@
 export interface Hero {
-  id: number;
-  localized_name: string;
-  img: string;
-  icon: string;
+  id: string;
+  name: string;
+  imageUrl: string;
+  iconUrl: string;
   roles: string[];
-  attack_type: string;
+  attackType: string;
 }

@@ -1,15 +1,13 @@
-import Axios from 'axios';
-import dashify from 'dashify';
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { connect, useDispatch } from 'react-redux';
 import { useParams, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { RootState } from 'typesafe-actions';
 
+import { loadHeroMatchups } from '../actions';
 import HeroAvatar from '../components/HeroAvatar';
 import { Hero } from '../models/hero';
-
-type Item = unknown;
+import { HeroMatchup } from '../models/hero-matchup';
 
 const HeroTitle = styled.div`
   display: inline-block;
@@ -31,17 +29,18 @@ const DotabuffLink = styled.a`
   }
 `;
 
-const HeroPage: React.FC<{ hero?: Hero }> = ({ hero }) => {
+const HeroPage: React.FC<{ hero?: Hero; heroMatchups?: HeroMatchup[] }> = ({
+  hero,
+  heroMatchups,
+}) => {
   const { heroId } = useParams();
-  const [, setItems] = useState([] as Item[]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    Axios.get<Item[]>(
-      `https://api.opendota.com/api/heroes/${heroId}/itemPopularity`,
-    ).then((resp) => {
-      setItems(resp.data);
-    });
-  }, [heroId]);
+    if (heroId) {
+      dispatch(loadHeroMatchups(heroId));
+    }
+  }, [dispatch, heroId]);
 
   if (!hero) {
     return <span>Loading...</span>;
@@ -50,20 +49,47 @@ const HeroPage: React.FC<{ hero?: Hero }> = ({ hero }) => {
   return (
     <div>
       <div>
-        <HeroAvatar name={hero.localized_name} url={hero.img}></HeroAvatar>
+        <HeroAvatar name={hero.name} url={hero.imageUrl}></HeroAvatar>
         <HeroTitle>
-          <HeroName>{hero.localized_name}</HeroName>
+          <HeroName>{hero.name}</HeroName>
           <div>
-            {hero.attack_type} - {hero.roles.join(', ')}
+            {hero.attackType} - {hero.roles.join(', ')}
           </div>
         </HeroTitle>
       </div>
+      <h2>Matchups</h2>
+      {heroMatchups && (
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Disadvantage</th>
+              <th>Matches Played</th>
+              <th>Win Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            {heroMatchups.map((heroMatchup) => (
+              <tr key={heroMatchup.name}>
+                <td>{heroMatchup.name}</td>
+                <td style={{ textAlign: 'right' }}>
+                  {heroMatchup.disadvantage.toFixed(2)}%
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  {heroMatchup.matchesPlayed.toLocaleString()}
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  {heroMatchup.winRate.toFixed(1)}%
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
       <div style={{ wordBreak: 'break-all' }}>{JSON.stringify(hero)}</div>
       <DotabuffLink
         target="_blank"
-        href={`https://dotabuff.com/heroes/${dashify(
-          hero.localized_name.replace("'", ''),
-        )}`}
+        href={`https://dotabuff.com/heroes/${hero.id}`}
       >
         <img
           alt="Dotabuff logo"
@@ -78,9 +104,10 @@ const mapStateToProps = (
   state: RootState,
   ownProps: RouteComponentProps<{ heroId: string }>,
 ) => {
-  const heroId = Number(ownProps?.match.params.heroId);
+  const heroId = ownProps?.match.params.heroId;
   return {
     hero: state.heroes.find((hero) => hero.id === heroId),
+    heroMatchups: state.heroMatchups,
   };
 };
 
