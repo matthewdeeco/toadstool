@@ -10,9 +10,12 @@ const heroesReducer = createReducer([] as Hero[]).handleAction(
   (state, action) => action.payload,
 );
 
-const heroMatchupsReducer = createReducer([] as HeroMatchup[]).handleAction(
+const heroMatchupsReducer = createReducer({} as Record<Hero['id'], HeroMatchup[]>).handleAction(
   actions.LOAD_HERO_MATCHUPS.success,
-  (state, action) => action.payload,
+  (state, action) => ({
+    ...state,
+    [action.payload.heroId]: action.payload.matchups,
+  }),
 );
 
 const rootReducer = combineReducers({

@@ -109,7 +109,7 @@ const mapStateToProps = (
   const heroId = ownProps?.match.params.heroId;
   return {
     hero: state.heroes.find((hero) => hero.id === heroId),
-    heroMatchups: state.heroMatchups,
+    heroMatchups: state.heroMatchups[heroId],
   };
 };
 
