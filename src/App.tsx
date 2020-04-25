@@ -22,7 +22,7 @@ const PageContainer = styled.div`
   color: white;
   max-width: ${SCREEN_MD_MAX};
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 2rem 1rem;
 `;
 
 export default function App() {
