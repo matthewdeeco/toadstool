@@ -6,6 +6,9 @@ import { RootState } from 'typesafe-actions';
 
 import { loadHeroMatchups } from '../actions';
 import HeroAvatar from '../components/HeroAvatar';
+import { Table } from 'antd';
+import Column from 'antd/lib/table/Column';
+import { Hero } from '../models/hero';
 
 function mapStateToProps(
   state: RootState,
@@ -38,7 +41,7 @@ const HeroName = styled.div`
 const HeroMatchupAvatar = styled.img`
   height: 24px;
   margin-right: 0.5rem;
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem;
 `;
 
 const DotabuffLink = styled.a`
@@ -46,6 +49,19 @@ const DotabuffLink = styled.a`
   display: inline-block;
   img {
     width: 128px;
+  }
+`;
+
+const StyledTable = styled(Table)`
+  .ant-table,
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr.ant-table-row:hover > td {
+    color: unset;
+    background: unset;
+  }
+  .ant-table-tbody > tr > td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 0 0.25rem 0;
   }
 `;
 
@@ -63,6 +79,13 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
     return <span>Loading...</span>;
   }
 
+  const tableData = (
+    Object.keys(matchups).map((enemyId) => ({
+      ...heroes[enemyId],
+      ...matchups[enemyId],
+    }))
+  );
+
   return (
     <div>
       <div>
@@ -78,37 +101,38 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
       {matchups && Object.keys(matchups).length > 0 && (
         <div>
           <h2>Matchups</h2>
-          <table>
-            <thead>
-              <tr>
-                <th colSpan={2} align="left">
-                  Hero
-                </th>
-                <th>Disadvantage</th>
-                <th>Matches Played</th>
-                <th>Win Rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.keys(matchups).map((heroId) => (
-                <tr key={heroId}>
-                  <td>
-                    <HeroMatchupAvatar alt="" src={heroes[heroId].imageUrl} />
-                  </td>
-                  <td>{heroes[heroId].name}</td>
-                  <td style={{ textAlign: 'right' }}>
-                    {matchups[heroId].disadvantage.toFixed(2)}%
-                  </td>
-                  <td style={{ textAlign: 'right' }}>
-                    {matchups[heroId].matchesPlayed.toLocaleString()}
-                  </td>
-                  <td style={{ textAlign: 'right' }}>
-                    {matchups[heroId].winRate.toFixed(1)}%
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <StyledTable dataSource={tableData} pagination={false}>
+            <Column title="Hero" align="left" dataIndex="name" key="name" render={(name, hero: Hero) => (
+              <div>
+                <HeroMatchupAvatar src={hero.imageUrl} alt="" />
+                {name}
+              </div>
+            )}></Column>
+
+            <Column
+              title="Disadvantage"
+              align="right"
+              dataIndex="disadvantage"
+              key="disadvantage"
+              render={(disadvantage) => `${disadvantage.toFixed(2)}%`}
+            ></Column>
+
+            <Column
+              title="Matches Played"
+              align="right"
+              dataIndex="matchesPlayed"
+              key="matchesPlayed"
+              render={(matchesPlayed) => matchesPlayed.toLocaleString()}
+            ></Column>
+
+            <Column
+              title="Disadvantage"
+              align="right"
+              dataIndex="winRate"
+              key="winRate"
+              render={(winRate) => `${winRate.toFixed(2)}%`}
+            ></Column>
+          </StyledTable>
         </div>
       )}
       <DotabuffLink
