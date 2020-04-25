@@ -55,7 +55,7 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
 
   useEffect(() => {
     if (heroId) {
-      dispatch(loadHeroMatchups(heroId));
+      dispatch(loadHeroMatchups([heroId]));
     }
   }, [dispatch, heroId]);
 

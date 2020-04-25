@@ -13,8 +13,8 @@ def kebab_case(s: str):
   return s.lower().replace(" ", "-").replace("'", "")
 
 
-def get_hero_matchup_data(hero_name: str):
-  resp = requests.get(f"https://www.dotabuff.com/heroes/{hero_name}/counters", headers=headers)
+def get_hero_matchup_data(hero_id: str):
+  resp = requests.get(f"https://www.dotabuff.com/heroes/{hero_id}/counters", headers=headers)
 
   soup = BeautifulSoup(resp.content, "html.parser")
 

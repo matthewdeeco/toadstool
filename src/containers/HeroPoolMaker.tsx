@@ -1,9 +1,11 @@
-import React from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { connect, ConnectedProps, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { RootState } from 'typesafe-actions';
 
+import { loadHeroMatchups } from '../actions';
 import HeroPicker from '../components/HeroPicker';
+import { Hero } from '../models/hero';
 
 function mapStateToProps(state: RootState) {
   return {
@@ -41,12 +43,23 @@ const InstructionsList = styled.ol`
 `;
 
 const HeroPoolMaker: React.FC<HeroPoolMakerProps> = ({ heroIds, heroes }) => {
+  const [heroPoolIds, setHeroPoolIds] = useState([] as Hero['id'][]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadHeroMatchups(heroPoolIds));
+  }, [heroPoolIds, dispatch]);
+
   return (
     <div>
       <h1>Dota 2 Hero Pool Maker</h1>
       <InstructionsList>
         <li>What is your current hero pool?</li>
-        <HeroPicker heroIds={heroIds} heroes={heroes} />
+        <HeroPicker
+          heroIds={heroIds}
+          heroes={heroes}
+          onChange={setHeroPoolIds}
+        />
         <li>
           Here are heroes that are good against your hero pool. Pick heroes that
           you want to counter.

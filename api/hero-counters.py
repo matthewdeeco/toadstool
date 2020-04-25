@@ -11,11 +11,14 @@ class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         params = parse_qs(urlparse(self.path).query)
-        heroes = params.get("hero")
+        heroIds = params.get("heroIds") or []
+        print(heroIds)
 
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
-        self.wfile.write(json.dumps(get_hero_matchup_data(heroes[0])).encode())
+
+        response = { heroIds[0]: get_hero_matchup_data(heroIds[0]) }
+        self.wfile.write(json.dumps(response).encode())
         return
 

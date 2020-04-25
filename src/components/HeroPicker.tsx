@@ -1,5 +1,5 @@
 import { AutoComplete, Tag } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Hero } from '../models/hero';
@@ -16,9 +16,22 @@ const HeroTag = styled(Tag)`
 const HeroPicker: React.FC<{
   heroIds: Hero['id'][];
   heroes: Record<Hero['id'], Hero>;
-}> = ({ heroIds, heroes }) => {
+  onChange: (heroIds: Hero['id'][]) => void;
+}> = ({ heroIds, heroes, onChange }) => {
   const [search, setSearch] = useState('');
-  const [selectedHeroIds, setSelectedHeroIds] = useState([] as Hero['id'][]);
+  const [selectedHeroIds, setSelectedHeroIds] = useState(() => {
+    return JSON.parse(
+      window.localStorage.getItem('heroPoolIds') || '[]',
+    ) as Hero['id'][];
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('heroPoolIds', JSON.stringify(selectedHeroIds));
+  }, [selectedHeroIds]);
+
+  useEffect(() => {
+    onChange(selectedHeroIds);
+  }, [selectedHeroIds, onChange]);
 
   return (
     <div>
@@ -31,7 +44,6 @@ const HeroPicker: React.FC<{
           setSearch(searchText);
         }}
         onSelect={(heroName, option) => {
-          console.log(selectedHeroIds, option.key);
           setSelectedHeroIds([...selectedHeroIds, option.key as Hero['id']]);
           setSearch('');
         }}
@@ -59,6 +71,7 @@ const HeroPicker: React.FC<{
 
       {selectedHeroIds
         .map((heroId) => heroes[heroId])
+        .filter((hero) => hero != null)
         .map((hero) => (
           <HeroTag
             key={hero.id}
