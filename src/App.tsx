@@ -9,7 +9,7 @@ import { AppNav } from './components/AppNav';
 import { SCREEN_MD_MAX } from './constants/breakpoints';
 import HeroList from './containers/HeroList';
 import Hero from './containers/HeroPage';
-import HeroPoolSuggester from './containers/HeroPoolSuggester';
+import HeroPoolMaker from './containers/HeroPoolMaker';
 import './App.scss';
 
 const history = createBrowserHistory();
@@ -43,7 +43,7 @@ export default function App() {
             </Route>
             <Route path="/heroes" exact component={HeroList}></Route>
             <Route path="/heroes/:heroId" component={Hero}></Route>
-            <Route path="/hero-pool" component={HeroPoolSuggester}></Route>
+            <Route path="/hero-pool" component={HeroPoolMaker}></Route>
           </Switch>
         </PageContainer>
       </ScrollContainer>
