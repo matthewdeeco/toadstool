@@ -3,7 +3,6 @@ import { createReducer } from 'typesafe-actions';
 
 import * as actions from './actions';
 import { Hero } from './models/hero';
-import { HeroMatchup } from './models/hero-matchup';
 
 const heroesReducer = createReducer(
   {} as Record<Hero['id'], Hero>,
@@ -17,7 +16,7 @@ const heroIdsReducer = createReducer([] as Hero['id'][]).handleAction(
 );
 
 const heroMatchupsReducer = createReducer(
-  {} as Record<Hero['id'], HeroMatchup[]>,
+  {} as actions.HeroMatchupMap,
 ).handleAction(actions.LOAD_HERO_MATCHUPS.success, (state, action) => ({
   ...state,
   ...action.payload,

@@ -25,16 +25,22 @@ export const loadHeroes = () => {
   };
 };
 
+export type HeroMatchupMap = {
+  [heroId: string]: {
+    [enemyId: string]: HeroMatchup;
+  };
+};
+
 export const LOAD_HERO_MATCHUPS = createAsyncAction(
   'LOAD_HERO_MATCHUPS_REQUEST',
   'LOAD_HERO_MATCHUPS_SUCCESS',
   'LOAD_HERO_MATCHUPS_FAILURE',
-)<Hero['id'][], Record<Hero['id'], HeroMatchup[]>, Error>();
+)<Hero['id'][], HeroMatchupMap, Error>();
 
 export const loadHeroMatchups = (heroIds: Hero['id'][]) => {
   return (dispatch: Dispatch): void => {
     dispatch(LOAD_HERO_MATCHUPS.request(heroIds));
-    Axios.get<Record<Hero['id'], HeroMatchup[]>>('/api/hero-counters', {
+    Axios.get<HeroMatchupMap>('/api/hero-counters', {
       params: { heroIds },
       paramsSerializer: (params) =>
         qs.stringify(params, { arrayFormat: 'repeat' }),

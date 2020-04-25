@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
+__all__ = ["get_hero_matchup_data"]
+
 headers = {
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
     "accept-encoding": "gzip, deflate",
@@ -9,11 +11,17 @@ headers = {
     "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36",
 }
 
+cache = {}
+
 def kebab_case(s: str):
   return s.lower().replace(" ", "-").replace("'", "")
 
 
 def get_hero_matchup_data(hero_id: str):
+  print(len(cache), cache.keys())
+  if hero_id in cache:
+    return cache[hero_id]
+
   resp = requests.get(f"https://www.dotabuff.com/heroes/{hero_id}/counters", headers=headers)
 
   soup = BeautifulSoup(resp.content, "html.parser")
@@ -34,5 +42,7 @@ def get_hero_matchup_data(hero_id: str):
       "matchesPlayed": float(hero_cells[4].attrs["data-value"]),
     }
     matchup_data.append(hero_data)
+
+  cache[hero_id] = matchup_data
 
   return matchup_data

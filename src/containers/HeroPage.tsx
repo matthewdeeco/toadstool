@@ -74,7 +74,8 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
           </div>
         </HeroTitle>
       </div>
-      {matchups && matchups.length > 0 && (
+      <br />
+      {matchups && Object.keys(matchups).length > 0 && (
         <div>
           <h2>Matchups</h2>
           <table>
@@ -89,23 +90,20 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
               </tr>
             </thead>
             <tbody>
-              {matchups.map((heroMatchup) => (
-                <tr key={heroMatchup.heroId}>
+              {Object.keys(matchups).map((heroId) => (
+                <tr key={heroId}>
                   <td>
-                    <HeroMatchupAvatar
-                      alt=""
-                      src={heroes[heroMatchup.heroId].imageUrl}
-                    />
+                    <HeroMatchupAvatar alt="" src={heroes[heroId].imageUrl} />
                   </td>
-                  <td>{heroes[heroMatchup.heroId].name}</td>
+                  <td>{heroes[heroId].name}</td>
                   <td style={{ textAlign: 'right' }}>
-                    {heroMatchup.disadvantage.toFixed(2)}%
+                    {matchups[heroId].disadvantage.toFixed(2)}%
                   </td>
                   <td style={{ textAlign: 'right' }}>
-                    {heroMatchup.matchesPlayed.toLocaleString()}
+                    {matchups[heroId].matchesPlayed.toLocaleString()}
                   </td>
                   <td style={{ textAlign: 'right' }}>
-                    {heroMatchup.winRate.toFixed(1)}%
+                    {matchups[heroId].winRate.toFixed(1)}%
                   </td>
                 </tr>
               ))}
@@ -113,7 +111,6 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
           </table>
         </div>
       )}
-      <div style={{ wordBreak: 'break-all' }}>{JSON.stringify(hero)}</div>
       <DotabuffLink
         target="_blank"
         href={`https://dotabuff.com/heroes/${hero.id}`}
