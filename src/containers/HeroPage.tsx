@@ -1,3 +1,5 @@
+import { Table } from 'antd';
+import Column from 'antd/lib/table/Column';
 import React, { useEffect } from 'react';
 import { connect, useDispatch, ConnectedProps } from 'react-redux';
 import { useParams, RouteComponentProps } from 'react-router-dom';
@@ -6,8 +8,6 @@ import { RootState } from 'typesafe-actions';
 
 import { loadHeroMatchups } from '../actions';
 import HeroAvatar from '../components/HeroAvatar';
-import { Table } from 'antd';
-import Column from 'antd/lib/table/Column';
 import { Hero } from '../models/hero';
 
 function mapStateToProps(
@@ -61,7 +61,7 @@ const StyledTable = styled(Table)`
   }
   .ant-table-tbody > tr > td {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 0.5rem 0 0.25rem 0;
+    padding: 0.5rem 1rem 0.25rem 1rem;
   }
 `;
 
@@ -79,12 +79,11 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
     return <span>Loading...</span>;
   }
 
-  const tableData = (
-    Object.keys(matchups).map((enemyId) => ({
-      ...heroes[enemyId],
-      ...matchups[enemyId],
-    }))
-  );
+  const tableData = Object.keys(matchups || {}).map((enemyId) => ({
+    key: enemyId,
+    ...heroes[enemyId],
+    ...matchups[enemyId],
+  }));
 
   return (
     <div>
@@ -102,12 +101,18 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
         <div>
           <h2>Matchups</h2>
           <StyledTable dataSource={tableData} pagination={false}>
-            <Column title="Hero" align="left" dataIndex="name" key="name" render={(name, hero: Hero) => (
-              <div>
-                <HeroMatchupAvatar src={hero.imageUrl} alt="" />
-                {name}
-              </div>
-            )}></Column>
+            <Column
+              title="Hero"
+              align="left"
+              dataIndex="name"
+              key="name"
+              render={(name, hero: Hero) => (
+                <div>
+                  <HeroMatchupAvatar src={hero.imageUrl} alt="" />
+                  {name}
+                </div>
+              )}
+            ></Column>
 
             <Column
               title="Disadvantage"
@@ -126,7 +131,7 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
             ></Column>
 
             <Column
-              title="Disadvantage"
+              title={`${hero.name} Win Rate`}
               align="right"
               dataIndex="winRate"
               key="winRate"
