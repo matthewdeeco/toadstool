@@ -35,7 +35,7 @@ class handler(BaseHTTPRequestHandler):
         if len(heroIds) > 1:
             # Add a summary
             summary = all_matchups.groupby(level=1).agg({
-                'disadvantage': 'sum',
+                'disadvantage': 'mean',
                 'winRate': 'mean',
                 'matchesPlayed': 'sum',
             })
@@ -45,19 +45,13 @@ class handler(BaseHTTPRequestHandler):
             summary = pd.concat([summary], keys=['summary'])
             all_matchups = pd.concat([all_matchups, summary], axis=0)
 
-            # Transform data into a dict of dicts
-            # 1st level key is the enemy ID
-            # 2nd level key is the hero ID
-            # value is the matchup data
-            hero_matchups_map = {}
-            for hero, matchups in all_matchups.groupby(level=1):
-                hero_matchups_map[hero] = matchups.reset_index(level=1, drop=True).to_dict("index")
+        # Transform data into a dict of dicts
+        # - 1st level key is the hero ID
+        # - 2nd level key is the enemy ID
+        # - value is the matchup data
+        hero_matchups_map = {}
+        for hero, matchups in all_matchups.groupby(level=0):
+            hero_matchups_map[hero] = matchups.reset_index(level=0, drop=True).to_dict("index")
 
-            self.wfile.write(json.dumps(hero_matchups_map).encode())
-            return
-
-        else:
-            hero_matchups_map = all_matchups.loc[heroIds[0]].to_dict("index")
-            self.wfile.write(json.dumps(hero_matchups_map).encode())
-            return
-
+        self.wfile.write(json.dumps(hero_matchups_map).encode())
+        return
