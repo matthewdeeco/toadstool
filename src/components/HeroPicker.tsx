@@ -37,7 +37,6 @@ const HeroPicker: React.FC<{
     <div>
       <AutoComplete
         value={search}
-        backfill={true}
         style={{ width: '100%' }}
         placeholder="Enter a hero name..."
         onSearch={(searchText) => {
