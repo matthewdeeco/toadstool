@@ -18,7 +18,6 @@ def kebab_case(s: str):
 
 
 def get_hero_matchup_data(hero_id: str):
-  print(len(cache), cache.keys())
   if hero_id in cache:
     return cache[hero_id]
 

@@ -5,17 +5,24 @@ import breakpoint from 'styled-components-breakpoint';
 const AppTable = styled(Table)`
   .ant-table {
     font-size: 12px;
+    overflow-x: auto;
   }
 
   .ant-table,
   .ant-table-thead > tr > th,
-  .ant-table-tbody > tr.ant-table-row:hover > td {
+  .ant-table-tbody > tr.ant-table-row:hover > td,
+  .ant-table-thead th.ant-table-column-has-sorters:hover,
+  td.ant-table-column-sort {
     color: unset;
     background: unset;
   }
+  .ant-table-cell-fix-left,
+  .ant-table-cell-fix-right {
+    background: #282c34 !important;
+  }
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
-    padding: 0.5rem 0;
+    padding: 0.5rem 0.25rem;
   }
   ${breakpoint('desktop')`
     .ant-table {
