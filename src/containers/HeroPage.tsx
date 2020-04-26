@@ -1,6 +1,8 @@
-
-import Column from 'antd/lib/table/Column';
+import { QuestionCircleFilled } from '@ant-design/icons';
+import { Tooltip } from 'antd';
+import { ColumnsType } from 'antd/lib/table';
 import React, { useEffect } from 'react';
+import { useResponsive } from 'react-hooks-responsive';
 import { connect, useDispatch, ConnectedProps } from 'react-redux';
 import { useParams, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
@@ -9,7 +11,6 @@ import { RootState } from 'typesafe-actions';
 import { loadHeroMatchups } from '../actions';
 import AppTable from '../components/AppTable';
 import HeroAvatar from '../components/HeroAvatar';
-import { Hero } from '../models/hero';
 
 function mapStateToProps(
   state: RootState,
@@ -26,6 +27,11 @@ function mapStateToProps(
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type HeroPageProps = PropsFromRedux & {};
+
+const HeroHeading = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 const HeroTitle = styled.div`
   display: inline-block;
@@ -69,6 +75,8 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
     }
   }, [dispatch, heroId]);
 
+  const disadvantageTitle = useResponsive({ short: 0, long: 1280 });
+
   if (!hero) {
     return <span>Loading...</span>;
   }
@@ -79,9 +87,60 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
     ...matchups[enemyId],
   }));
 
+  const tableColumns: ColumnsType<typeof tableData[0] | object> = [
+    {
+      key: 'name',
+      dataIndex: 'name',
+      title: 'Hero',
+      render: (name: string, hero) => (
+        <div style={{ whiteSpace: 'nowrap' }}>
+          <HeroMatchupAvatar
+            src={(hero as typeof tableData[0]).imageUrl}
+            alt=""
+          />
+          {name}
+        </div>
+      ),
+      align: 'left',
+    },
+    {
+      key: 'disadvantage',
+      dataIndex: 'disadvantage',
+      title: (
+        <span>
+          {disadvantageTitle.size === 'long' ? 'Disadvantage' : 'Dis.'}
+          &nbsp;
+          <Tooltip
+            overlayStyle={{ fontSize: '12px' }}
+            placement="bottom"
+            title="Advantage measures the matchup between two heroes regardless of their normal win rate. It is calculated by establishing their win rates both in and outside of the matchup and comparing the difference against a base win rate. The calculation is procedural and advantage / disadvantage results are not designed to be symmetrical."
+          >
+            <QuestionCircleFilled />
+          </Tooltip>
+        </span>
+      ),
+      align: 'right',
+      render: (disadvantage: number) => `${disadvantage.toFixed(2)}%`,
+    },
+    {
+      key: 'matchesPlayed',
+      dataIndex: 'matchesPlayed',
+      title: 'Matches Played',
+      align: 'right',
+      render: (matchesPlayed: number) => matchesPlayed.toLocaleString(),
+    },
+    {
+      key: 'winRate',
+      dataIndex: 'winRate',
+      title: `${hero.name} Win Rate`,
+      align: 'right',
+      render: (winRate: number) => `${winRate.toFixed(2)}%`,
+    },
+  ];
+
   return (
     <div>
-      <div>
+      <HeroHeading>
         <HeroAvatar name={hero.name} imageUrl={hero.imageUrl}></HeroAvatar>
         <HeroTitle>
           <HeroName>{hero.name}</HeroName>
@@ -89,49 +148,16 @@ const HeroPage: React.FC<HeroPageProps> = ({ hero, heroes, matchups }) => {
             {hero.attackType} - {hero.roles.join(', ')}
           </div>
         </HeroTitle>
-      </div>
+      </HeroHeading>
       <br />
       {matchups && Object.keys(matchups).length > 0 && (
         <div>
           <h2>Matchups</h2>
-          <StyledTable dataSource={tableData} pagination={false}>
-            <Column
-              title="Hero"
-              align="left"
-              dataIndex="name"
-              key="name"
-              render={(name: string, hero: Hero) => (
-                <div style={{ whiteSpace: 'nowrap' }}>
-                  <HeroMatchupAvatar src={hero.imageUrl} alt="" />
-                  {name}
-                </div>
-              )}
-            ></Column>
-
-            <Column
-              title="Dis."
-              align="right"
-              dataIndex="disadvantage"
-              key="disadvantage"
-              render={(disadvantage: number) => `${disadvantage.toFixed(2)}%`}
-            ></Column>
-
-            <Column
-              title="Matches Played"
-              align="right"
-              dataIndex="matchesPlayed"
-              key="matchesPlayed"
-              render={(matchesPlayed: number) => matchesPlayed.toLocaleString()}
-            ></Column>
-
-            <Column
-              title={`${hero.name} Win Rate`}
-              align="right"
-              dataIndex="winRate"
-              key="winRate"
-              render={(winRate: number) => `${winRate.toFixed(2)}%`}
-            ></Column>
-          </StyledTable>
+          <StyledTable
+            dataSource={tableData}
+            pagination={false}
+            columns={tableColumns}
+          ></StyledTable>
         </div>
       )}
       <DotabuffLink

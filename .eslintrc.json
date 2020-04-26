@@ -13,6 +13,7 @@
     "plugin:react/recommended"
   ],
   "rules": {
+    "react/display-name": ["off"],
     "import/order": [
       "error",
       {
