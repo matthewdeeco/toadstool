@@ -34,6 +34,7 @@ class handler(BaseHTTPRequestHandler):
         WIN_RATE_THRESHOLDS = [0, 47, 48, 49, 51, 52, 53, 100]
         all_matchups["disadvantageTier"] = pd.cut(all_matchups.disadvantage, bins=DISADVANTAGE_THRESHOLDS, labels=BIN_LABELS)
         all_matchups["winRateTier"] = pd.cut(all_matchups.winRate, bins=WIN_RATE_THRESHOLDS, labels=BIN_LABELS)
+        all_matchups["matchesPlayedTier"] = pd.qcut(all_matchups.matchesPlayed, q=5, labels=range(1, 6))
 
         if len(heroIds) > 1:
             # Add a summary
@@ -44,6 +45,7 @@ class handler(BaseHTTPRequestHandler):
             })
             summary["disadvantageTier"] = pd.cut(summary.disadvantage, bins=DISADVANTAGE_THRESHOLDS, labels=BIN_LABELS)
             summary["winRateTier"] = pd.cut(summary.winRate, bins=WIN_RATE_THRESHOLDS, labels=BIN_LABELS)
+            summary["matchesPlayedTier"] = pd.qcut(summary.matchesPlayed, q=5, labels=range(1, 6))
 
             summary = pd.concat([summary], keys=['summary'])
             all_matchups = pd.concat([all_matchups, summary], axis=0)

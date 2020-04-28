@@ -118,24 +118,13 @@ const HeroMatchupsTable: React.FC<{
               ? {
                   key: `${heroId}.matchesPlayed`,
                   dataIndex: ['matchups', heroId, 'matchesPlayed'],
-                  title: (
-                    <span>
-                      Matches Played &nbsp;
-                      <Tooltip
-                        overlayStyle={{ fontSize: '12px' }}
-                        placement="bottom"
-                        title="Each icon represents 100,000 matches played"
-                      >
-                        <QuestionCircleFilled />
-                      </Tooltip>
-                    </span>
-                  ),
+                  title: 'Matches Played',
                   align: showValues ? 'right' : 'left',
                   render: (matchesPlayed: number, hero) =>
                     showValues
                       ? matchesPlayed?.toLocaleString()
                       : Array.from(
-                          { length: matchesPlayed / 100000 + 1 },
+                          { length: hero.matchups[heroId]?.matchesPlayedTier },
                           (v, i) => (
                             <img
                               key={i}
@@ -146,8 +135,8 @@ const HeroMatchupsTable: React.FC<{
                           ),
                         ),
                   sorter: (a, b) =>
-                    a.matchups[heroId]?.matchesPlayed -
-                    b.matchups[heroId]?.matchesPlayed,
+                    (a.matchups[heroId]?.matchesPlayed ?? 0) -
+                    (b.matchups[heroId]?.matchesPlayed ?? 0),
                 }
               : {},
           ],
