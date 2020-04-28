@@ -15,15 +15,22 @@ export default (request: NowRequest, response: NowResponse) => {
   Axios.get<Record<number, Hero>>('https://api.opendota.com/api/constants/heroes').then(resp => {
     const heroes = (
       Object.values(resp.data)
-      .map(hero => ({
-        id: dashify(hero.localized_name.replace("'", "")),
-        name: hero.localized_name,
-        imageUrl: `https://api.opendota.com${hero.img}`,
-        iconUrl: `https://api.opendota.com${hero.icon}`,
-        roles: hero.roles,
-        attackType: hero.attack_type,
-        internalId: hero.id,
-      }))
+      .map(hero => {
+        const heroId = dashify(hero.localized_name.replace("'", ""));
+        const iconUrl = [126, 128].includes(hero.id) ?
+          `https://raw.githubusercontent.com/odota/web/master/public/assets/images/dota2/heroes/${hero.id}_icon.png` :
+          `https://api.opendota.com${hero.icon}`;
+
+        return {
+          id: heroId,
+          name: hero.localized_name,
+          imageUrl: `https://api.opendota.com${hero.img}`,
+          iconUrl,
+          roles: hero.roles,
+          attackType: hero.attack_type,
+          internalId: hero.id,
+        };
+      })
       .sort((hero1, hero2) =>
         hero1.name < hero2.name ? -1 : 1,
       )

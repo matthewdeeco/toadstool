@@ -29,8 +29,11 @@ class handler(BaseHTTPRequestHandler):
         all_matchups = pd.concat(all_matchups, keys=heroIds, axis=0)
 
         # Bucket the values across all heroes
-        for column in all_matchups.columns:
-            all_matchups[f"{column}Tier"] = pd.cut(all_matchups[column], bins=7, labels=range(-3,4))
+        BIN_LABELS = [-3, -2, -1, 0, 1, 2, 3]
+        DISADVANTAGE_THRESHOLDS = [-100, -3, -2, -1, 1, 2, 3, 100]
+        WIN_RATE_THRESHOLDS = [0, 47, 48, 49, 51, 52, 53, 100]
+        all_matchups["disadvantageTier"] = pd.cut(all_matchups.disadvantage, bins=DISADVANTAGE_THRESHOLDS, labels=BIN_LABELS)
+        all_matchups["winRateTier"] = pd.cut(all_matchups.winRate, bins=WIN_RATE_THRESHOLDS, labels=BIN_LABELS)
 
         if len(heroIds) > 1:
             # Add a summary
@@ -39,8 +42,8 @@ class handler(BaseHTTPRequestHandler):
                 'winRate': 'mean',
                 'matchesPlayed': 'sum',
             })
-            for column in summary.columns:
-                summary[f"{column}Tier"] = pd.cut(summary[column], bins=7, labels=range(-3,4))
+            summary["disadvantageTier"] = pd.cut(summary.disadvantage, bins=DISADVANTAGE_THRESHOLDS, labels=BIN_LABELS)
+            summary["winRateTier"] = pd.cut(summary.winRate, bins=WIN_RATE_THRESHOLDS, labels=BIN_LABELS)
 
             summary = pd.concat([summary], keys=['summary'])
             all_matchups = pd.concat([all_matchups, summary], axis=0)
