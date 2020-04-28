@@ -114,19 +114,31 @@ const HeroMatchupsTable: React.FC<{
               sorter: (a, b) =>
                 a.matchups[heroId]?.winRate - b.matchups[heroId]?.winRate,
             },
-            isSummary
+            isSummary || !shouldIncludeSummary
               ? {
                   key: `${heroId}.matchesPlayed`,
                   dataIndex: ['matchups', heroId, 'matchesPlayed'],
-                  title: 'Matches Played',
+                  title: (
+                    <span>
+                      Matches Played &nbsp;
+                      <Tooltip
+                        overlayStyle={{ fontSize: '12px' }}
+                        placement="bottom"
+                        title="Each icon represents 100,000 matches played"
+                      >
+                        <QuestionCircleFilled />
+                      </Tooltip>
+                    </span>
+                  ),
                   align: showValues ? 'right' : 'left',
                   render: (matchesPlayed: number, hero) =>
                     showValues
                       ? matchesPlayed?.toLocaleString()
                       : Array.from(
                           { length: matchesPlayed / 100000 + 1 },
-                          () => (
+                          (v, i) => (
                             <img
+                              key={i}
                               src={hero.iconUrl}
                               alt={`${matchesPlayed}`}
                               height="18px"
@@ -161,11 +173,13 @@ const HeroMatchupsTable: React.FC<{
 
   return (
     <div>
-      <Checkbox onChange={(e) => setShowValues(e.target.checked)}>
-        Show values
+      <Checkbox
+        style={{ color: 'unset' }}
+        onChange={(e) => setShowValues(e.target.checked)}
+      >
+        Show actual values
       </Checkbox>
       <AppTable
-        pagination={false}
         dataSource={tableRecords}
         columns={columns as ColumnsType<object>}
       ></AppTable>
