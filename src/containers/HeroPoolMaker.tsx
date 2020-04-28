@@ -50,6 +50,7 @@ const HeroPoolMaker: React.FC<HeroPoolMakerProps> = ({
   heroMatchups,
 }) => {
   const [heroPoolIds, setHeroPoolIds] = useState([] as Hero['id'][]);
+  const [counterHeroIds, setCounterHeroIds] = useState([] as Hero['id'][]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -57,6 +58,12 @@ const HeroPoolMaker: React.FC<HeroPoolMakerProps> = ({
       dispatch(loadHeroMatchups(heroPoolIds));
     }
   }, [heroPoolIds, dispatch]);
+
+  useEffect(() => {
+    if (counterHeroIds?.length > 0) {
+      dispatch(loadHeroMatchups(counterHeroIds));
+    }
+  }, [counterHeroIds, dispatch]);
 
   return (
     <div>
@@ -81,11 +88,22 @@ const HeroPoolMaker: React.FC<HeroPoolMakerProps> = ({
             colHeroIds={heroPoolIds}
             heroes={heroes}
             heroMatchups={heroMatchups}
+            onSelectHeroes={setCounterHeroIds}
           />
         )}
         <InstructionsListItem>
           You should start learning these heroes:
         </InstructionsListItem>
+
+        {heroMatchups && Object.keys(heroMatchups).length > 0 && (
+          <HeroMatchupsTable
+            rowHeroIds={heroIds}
+            colHeroIds={counterHeroIds}
+            heroes={heroes}
+            heroMatchups={heroMatchups}
+            flipValues={true}
+          />
+        )}
       </InstructionsList>
     </div>
   );

@@ -31,7 +31,7 @@ class handler(BaseHTTPRequestHandler):
         # Bucket the values across all heroes
         BIN_LABELS = [-3, -2, -1, 0, 1, 2, 3]
         DISADVANTAGE_THRESHOLDS = [-100, -3, -2, -1, 1, 2, 3, 100]
-        WIN_RATE_THRESHOLDS = [0, 47, 48, 49, 51, 52, 53, 100]
+        WIN_RATE_THRESHOLDS = [0, 45, 47, 49, 51, 53, 55, 100]
         all_matchups["disadvantageTier"] = pd.cut(all_matchups.disadvantage, bins=DISADVANTAGE_THRESHOLDS, labels=BIN_LABELS)
         all_matchups["winRateTier"] = pd.cut(all_matchups.winRate, bins=WIN_RATE_THRESHOLDS, labels=BIN_LABELS)
         all_matchups["matchesPlayedTier"] = pd.qcut(all_matchups.matchesPlayed, q=5, labels=range(1, 6))

@@ -1,8 +1,9 @@
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { Tooltip, Checkbox } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useResponsive } from 'react-hooks-responsive';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { HeroMatchupMap } from '../actions';
@@ -23,8 +24,27 @@ const HeroMatchupsTable: React.FC<{
   colHeroIds: Hero['id'][];
   heroes: Record<Hero['id'], Hero>;
   heroMatchups: HeroMatchupMap;
-}> = ({ rowHeroIds, colHeroIds, heroes, heroMatchups }) => {
+  onSelectHeroes?: (selectedHeroIds: Hero['id'][]) => void;
+  flipValues?: boolean;
+}> = ({
+  rowHeroIds,
+  colHeroIds,
+  heroes,
+  heroMatchups,
+  onSelectHeroes,
+}) => {
   const [showValues, setShowValues] = useState(false);
+  const [selectedHeroIds, setSelectedHeroIds] = useState([] as Hero['id'][]);
+
+  useEffect(() => {
+    setSelectedHeroIds([]);
+  }, [colHeroIds]);
+
+  useEffect(() => {
+    if (onSelectHeroes) {
+      onSelectHeroes(selectedHeroIds);
+    }
+  }, [selectedHeroIds, onSelectHeroes]);
 
   const tableRecords = rowHeroIds.map((enemyId) => {
     const matchups: { [allyId: string]: HeroMatchup } = {};
@@ -76,7 +96,8 @@ const HeroMatchupsTable: React.FC<{
                 </span>
               ),
               align: 'right',
-              defaultSortOrder: isSummary ? 'ascend' : undefined,
+              defaultSortOrder:
+                isSummary || !shouldIncludeSummary ? 'ascend' : undefined,
               render: (disadvantage: number, hero) =>
                 showValues ? (
                   disadvantage ? (
@@ -129,7 +150,7 @@ const HeroMatchupsTable: React.FC<{
                             <img
                               key={i}
                               src={hero.iconUrl}
-                              alt={`${matchesPlayed}`}
+                              alt=""
                               height="18px"
                             />
                           ),
@@ -151,8 +172,24 @@ const HeroMatchupsTable: React.FC<{
         fixed: 'left',
         render: (name: string, hero) => (
           <div style={{ whiteSpace: 'nowrap' }}>
+            {onSelectHeroes && (
+              <Checkbox
+                checked={selectedHeroIds.includes(hero.id)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedHeroIds([...selectedHeroIds, hero.id]);
+                  } else {
+                    setSelectedHeroIds(
+                      selectedHeroIds.filter((heroId) => heroId !== hero.id),
+                    );
+                  }
+                }}
+              ></Checkbox>
+            )}
             <HeroMatchupAvatar src={hero.imageUrl} alt="" />
-            {name}
+            <Link to={`/heroes/${hero.id}`} target="_blank">
+              {name}
+            </Link>
           </div>
         ),
         align: 'left',
@@ -168,6 +205,7 @@ const HeroMatchupsTable: React.FC<{
       >
         Show actual values
       </Checkbox>
+      {JSON.stringify(selectedHeroIds)}
       <AppTable
         dataSource={tableRecords}
         columns={columns as ColumnsType<object>}
