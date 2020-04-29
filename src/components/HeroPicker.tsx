@@ -1,17 +1,9 @@
-import { AutoComplete, Tag } from 'antd';
+import { AutoComplete } from 'antd';
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 
 import { Hero } from '../models/hero';
 
-const HeroTag = styled(Tag)`
-  padding-left: 0;
-  margin-top: 0.5rem;
-  border: none;
-  img {
-    margin-right: 0.25rem;
-  }
-`;
+import HeroTag from './HeroTag';
 
 const HeroPicker: React.FC<{
   heroIds: Hero['id'][];
@@ -74,15 +66,13 @@ const HeroPicker: React.FC<{
         .map((hero) => (
           <HeroTag
             key={hero.id}
-            closable
+            hero={hero}
             onClose={() => {
               setSelectedHeroIds(
                 selectedHeroIds.filter((heroId) => heroId !== hero.id),
               );
             }}
-          >
-            <img src={hero.imageUrl} height="24px" alt="" /> {hero.name}
-          </HeroTag>
+          />
         ))}
     </div>
   );

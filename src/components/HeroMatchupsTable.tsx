@@ -11,6 +11,7 @@ import { Hero } from '../models/hero';
 import { HeroMatchup } from '../models/hero-matchup';
 
 import AppTable from './AppTable';
+import HeroTag from './HeroTag';
 import MatchupIndicator from './MatchupIndicator';
 
 const HeroMatchupAvatar = styled.img`
@@ -35,7 +36,14 @@ const HeroMatchupsTable: React.FC<{
   heroMatchups: HeroMatchupMap;
   onSelectHeroes?: (selectedHeroIds: Hero['id'][]) => void;
   flipValues?: boolean;
-}> = ({ rowHeroIds, colHeroIds, heroes, heroMatchups, onSelectHeroes }) => {
+}> = ({
+  rowHeroIds,
+  colHeroIds,
+  heroes,
+  heroMatchups,
+  onSelectHeroes,
+  flipValues = false,
+}) => {
   const [showValues, setShowValues] = useState(false);
   const [selectedHeroIds, setSelectedHeroIds] = useState([] as Hero['id'][]);
 
@@ -111,7 +119,7 @@ const HeroMatchupsTable: React.FC<{
                 ) : (
                   <MatchupIndicator
                     value={hero.matchups[heroId]?.disadvantageTier}
-                    isHigherBetter={false}
+                    isHigherBetter={flipValues}
                   ></MatchupIndicator>
                 ),
               sorter: (a, b) =>
@@ -125,14 +133,22 @@ const HeroMatchupsTable: React.FC<{
               align: 'right',
               render: (winRate: number, hero) =>
                 showValues ? (
-                  winRate ? (
-                    `${winRate.toFixed(2)}%`
-                  ) : (
-                    ''
-                  )
+                  <Tooltip
+                    title={
+                      winRate &&
+                      `${
+                        heroes[heroId]?.name
+                          ? heroes[heroId].name + ' has'
+                          : 'On average, the heroes you selected have'
+                      } a ${winRate.toFixed(2)}% win rate against ${hero.name}.`
+                    }
+                  >
+                    <span>{winRate ? `${winRate.toFixed(2)}%` : ''}</span>
+                  </Tooltip>
                 ) : (
                   <MatchupIndicator
                     value={hero.matchups[heroId]?.winRateTier}
+                    isHigherBetter={!flipValues}
                   ></MatchupIndicator>
                 ),
               sorter: (a, b) =>
@@ -206,11 +222,29 @@ const HeroMatchupsTable: React.FC<{
       <ShowValuesCheckbox onChange={(e) => setShowValues(e.target.checked)}>
         Show actual values
       </ShowValuesCheckbox>
-      {JSON.stringify(selectedHeroIds)}
       <AppTable
         dataSource={tableRecords}
         columns={columns as ColumnsType<object>}
       ></AppTable>
+
+      {selectedHeroIds?.length > 0 && (
+        <div>
+          <h3>To counter</h3>
+          {selectedHeroIds.map((heroId) => (
+            <HeroTag
+              key={heroId}
+              hero={heroes[heroId]}
+              onClose={() => {
+                setSelectedHeroIds(
+                  selectedHeroIds.filter(
+                    (selectedHeroId) => selectedHeroId !== heroId,
+                  ),
+                );
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

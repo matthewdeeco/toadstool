@@ -42,7 +42,9 @@ export const heroPoolMakerStateReducer = createReducer(
     () => HERO_POOL_MAKER_STATE.LOADED_COUNTER_MATCHUPS,
   );
 
-export const counterMatchupsReducer = createReducer({} as actions.HeroMatchupMap)
+export const counterMatchupsReducer = createReducer(
+  {} as actions.HeroMatchupMap,
+)
   .handleAction(actions.LOAD_COUNTER_MATCHUPS.request, () => ({}))
   .handleAction(actions.LOAD_COUNTER_MATCHUPS.success, (state, action) => ({
     ...state,

@@ -34,6 +34,8 @@ const InstructionsListItem = styled.li`
   counter-increment: item;
   list-style: none inside;
   margin: 1rem 0 0.5rem 0;
+  font-size: 1.25rem;
+
   :before {
     content: counter(item);
     align-items: center;
