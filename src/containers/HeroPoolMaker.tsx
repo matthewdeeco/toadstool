@@ -115,7 +115,9 @@ const HeroPoolMaker: React.FC<HeroPoolMakerProps> = ({
             </InstructionsListItem>
 
             <HeroMatchupsTable
-              rowHeroIds={heroIds}
+              rowHeroIds={heroIds.filter(
+                (heroId) => !heroPoolIds.includes(heroId),
+              )}
               colHeroIds={counterHeroIds}
               heroes={heroes}
               heroMatchups={counterMatchups}

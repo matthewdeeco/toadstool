@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 import { Hero } from '../models/hero';
 
-
 const StyledTag = styled(Tag)`
   padding-left: 0;
   margin-top: 0.5rem;

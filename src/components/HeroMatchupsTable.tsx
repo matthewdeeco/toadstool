@@ -152,7 +152,8 @@ const HeroMatchupsTable: React.FC<{
                   ></MatchupIndicator>
                 ),
               sorter: (a, b) =>
-                a.matchups[heroId]?.winRate - b.matchups[heroId]?.winRate,
+                (a.matchups[heroId]?.winRate ?? 0) -
+                (b.matchups[heroId]?.winRate ?? 0),
             },
             isSummary || !shouldIncludeSummary
               ? {

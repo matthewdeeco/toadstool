@@ -1,4 +1,9 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const StyledSpan = styled.span`
+  font-size: 16px;
+`;
 
 const MatchupIndicator: React.FC<{
   value: number;
@@ -9,13 +14,17 @@ const MatchupIndicator: React.FC<{
   const isValuePositive = value > 0;
   const color = useColor
     ? isValuePositive === isHigherBetter
-      ? 'green'
-      : 'red'
+      ? '#20fc8f'
+      : '#ff5964'
     : undefined;
   if (value > 0) {
-    return <span style={{ color }}>{'\u25b4'.repeat(numArrows)}</span>;
+    return (
+      <StyledSpan style={{ color }}>{'\u25b4'.repeat(numArrows)}</StyledSpan>
+    );
   } else {
-    return <span style={{ color }}>{'\u25be'.repeat(numArrows)}</span>;
+    return (
+      <StyledSpan style={{ color }}>{'\u25be'.repeat(numArrows)}</StyledSpan>
+    );
   }
 };
 
