@@ -19,6 +19,15 @@ const HeroMatchupAvatar = styled.img`
   margin-bottom: 0.25rem;
 `;
 
+const SelectHeroCheckbox = styled(Checkbox)`
+  margin-right: 0.5rem;
+`;
+
+const ShowValuesCheckbox = styled(Checkbox)`
+  float: right;
+  color: unset;
+`;
+
 const HeroMatchupsTable: React.FC<{
   rowHeroIds: Hero['id'][];
   colHeroIds: Hero['id'][];
@@ -26,13 +35,7 @@ const HeroMatchupsTable: React.FC<{
   heroMatchups: HeroMatchupMap;
   onSelectHeroes?: (selectedHeroIds: Hero['id'][]) => void;
   flipValues?: boolean;
-}> = ({
-  rowHeroIds,
-  colHeroIds,
-  heroes,
-  heroMatchups,
-  onSelectHeroes,
-}) => {
+}> = ({ rowHeroIds, colHeroIds, heroes, heroMatchups, onSelectHeroes }) => {
   const [showValues, setShowValues] = useState(false);
   const [selectedHeroIds, setSelectedHeroIds] = useState([] as Hero['id'][]);
 
@@ -173,7 +176,7 @@ const HeroMatchupsTable: React.FC<{
         render: (name: string, hero) => (
           <div style={{ whiteSpace: 'nowrap' }}>
             {onSelectHeroes && (
-              <Checkbox
+              <SelectHeroCheckbox
                 checked={selectedHeroIds.includes(hero.id)}
                 onChange={(e) => {
                   if (e.target.checked) {
@@ -184,7 +187,7 @@ const HeroMatchupsTable: React.FC<{
                     );
                   }
                 }}
-              ></Checkbox>
+              ></SelectHeroCheckbox>
             )}
             <HeroMatchupAvatar src={hero.imageUrl} alt="" />
             <Link to={`/heroes/${hero.id}`} target="_blank">
@@ -193,18 +196,16 @@ const HeroMatchupsTable: React.FC<{
           </div>
         ),
         align: 'left',
+        sorter: (a, b) => a.name.localeCompare(b.name),
       },
     ],
   );
 
   return (
     <div>
-      <Checkbox
-        style={{ color: 'unset' }}
-        onChange={(e) => setShowValues(e.target.checked)}
-      >
+      <ShowValuesCheckbox onChange={(e) => setShowValues(e.target.checked)}>
         Show actual values
-      </Checkbox>
+      </ShowValuesCheckbox>
       {JSON.stringify(selectedHeroIds)}
       <AppTable
         dataSource={tableRecords}

@@ -1,18 +1,22 @@
+import { LoadingOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { RootState } from 'typesafe-actions';
 
-import { loadHeroMatchups } from '../actions';
+import { loadHeroMatchups, loadCounterMatchups } from '../actions';
 import HeroMatchupsTable from '../components/HeroMatchupsTable';
 import HeroPicker from '../components/HeroPicker';
 import { Hero } from '../models/hero';
+import { HERO_POOL_MAKER_STATE } from '../reducers';
 
 function mapStateToProps(state: RootState) {
   return {
     heroes: state.heroes,
     heroIds: state.heroIds,
     heroMatchups: state.heroMatchups,
+    counterMatchups: state.counterMatchups,
+    heroPoolMakerState: state.heroPoolMakerState,
   };
 }
 
@@ -48,6 +52,8 @@ const HeroPoolMaker: React.FC<HeroPoolMakerProps> = ({
   heroIds,
   heroes,
   heroMatchups,
+  counterMatchups,
+  heroPoolMakerState,
 }) => {
   const [heroPoolIds, setHeroPoolIds] = useState([] as Hero['id'][]);
   const [counterHeroIds, setCounterHeroIds] = useState([] as Hero['id'][]);
@@ -61,7 +67,7 @@ const HeroPoolMaker: React.FC<HeroPoolMakerProps> = ({
 
   useEffect(() => {
     if (counterHeroIds?.length > 0) {
-      dispatch(loadHeroMatchups(counterHeroIds));
+      dispatch(loadCounterMatchups(counterHeroIds));
     }
   }, [counterHeroIds, dispatch]);
 
@@ -69,42 +75,61 @@ const HeroPoolMaker: React.FC<HeroPoolMakerProps> = ({
     <div>
       <h1>Dota 2 Hero Pool Maker</h1>
       <InstructionsList>
-        <InstructionsListItem>
-          What is your current hero pool?
-        </InstructionsListItem>
-        <HeroPicker
-          heroIds={heroIds}
-          heroes={heroes}
-          onChange={setHeroPoolIds}
-        />
-        <InstructionsListItem>
-          Here are heroes that are good against your hero pool. Pick heroes that
-          you want to counter.
-        </InstructionsListItem>
-
-        {heroMatchups && Object.keys(heroMatchups).length > 0 && (
-          <HeroMatchupsTable
-            rowHeroIds={heroIds}
-            colHeroIds={heroPoolIds}
-            heroes={heroes}
-            heroMatchups={heroMatchups}
-            onSelectHeroes={setCounterHeroIds}
-          />
+        {heroPoolMakerState >= HERO_POOL_MAKER_STATE.LOADED_HEROES && (
+          <div>
+            <InstructionsListItem>
+              What is your current hero pool?
+            </InstructionsListItem>
+            <HeroPicker
+              heroIds={heroIds}
+              heroes={heroes}
+              onChange={setHeroPoolIds}
+            />
+          </div>
         )}
-        <InstructionsListItem>
-          You should start learning these heroes:
-        </InstructionsListItem>
 
-        {heroMatchups && Object.keys(heroMatchups).length > 0 && (
-          <HeroMatchupsTable
-            rowHeroIds={heroIds}
-            colHeroIds={counterHeroIds}
-            heroes={heroes}
-            heroMatchups={heroMatchups}
-            flipValues={true}
-          />
+        {heroPoolMakerState >= HERO_POOL_MAKER_STATE.LOADED_HERO_MATCHUPS && (
+          <div>
+            <InstructionsListItem>
+              Here are heroes that are good against your hero pool. Pick heroes
+              that you want to counter.
+            </InstructionsListItem>
+
+            <HeroMatchupsTable
+              rowHeroIds={heroIds}
+              colHeroIds={heroPoolIds}
+              heroes={heroes}
+              heroMatchups={heroMatchups}
+              onSelectHeroes={setCounterHeroIds}
+            />
+          </div>
+        )}
+
+        {heroPoolMakerState >=
+          HERO_POOL_MAKER_STATE.LOADED_COUNTER_MATCHUPS && (
+          <div>
+            <InstructionsListItem>
+              You should start learning these heroes:
+            </InstructionsListItem>
+
+            <HeroMatchupsTable
+              rowHeroIds={heroIds}
+              colHeroIds={counterHeroIds}
+              heroes={heroes}
+              heroMatchups={counterMatchups}
+              flipValues={true}
+            />
+          </div>
         )}
       </InstructionsList>
+      {heroPoolMakerState === HERO_POOL_MAKER_STATE.LOADING_HEROES && (
+        <LoadingOutlined />
+      )}
+      {heroPoolMakerState === HERO_POOL_MAKER_STATE.LOADING_HERO_MATCHUPS && (
+        <LoadingOutlined />
+      )}
+      {heroPoolMakerState ===
+        HERO_POOL_MAKER_STATE.LOADING_COUNTER_MATCHUPS && <LoadingOutlined />}
     </div>
   );
 };

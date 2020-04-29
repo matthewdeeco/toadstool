@@ -53,3 +53,26 @@ export const loadHeroMatchups = (heroIds: Hero['id'][]) => {
       });
   };
 };
+
+export const LOAD_COUNTER_MATCHUPS = createAsyncAction(
+  'LOAD_COUNTER_MATCHUPS_REQUEST',
+  'LOAD_COUNTER_MATCHUPS_SUCCESS',
+  'LOAD_COUNTER_MATCHUPS_FAILURE',
+)<Hero['id'][], HeroMatchupMap, Error>();
+
+export const loadCounterMatchups = (heroIds: Hero['id'][]) => {
+  return (dispatch: Dispatch): void => {
+    dispatch(LOAD_COUNTER_MATCHUPS.request(heroIds));
+    Axios.get<HeroMatchupMap>('/api/hero-counters', {
+      params: { heroIds },
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: 'repeat' }),
+    })
+      .then((resp) => {
+        dispatch(LOAD_COUNTER_MATCHUPS.success(resp.data));
+      })
+      .catch((error) => {
+        dispatch(LOAD_COUNTER_MATCHUPS.failure(error));
+      });
+  };
+};
