@@ -8,7 +8,7 @@ import { loadHeroMatchups, loadCounterMatchups } from '../actions';
 import HeroMatchupsTable from '../components/HeroMatchupsTable';
 import HeroPicker from '../components/HeroPicker';
 import { Hero } from '../models/hero';
-import { HERO_POOL_MAKER_STATE } from '../reducers';
+import { HERO_POOL_MAKER_STATE } from '../reducers/hero-pool-maker';
 
 function mapStateToProps(state: RootState) {
   return {
