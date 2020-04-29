@@ -17,12 +17,9 @@ import MatchupIndicator from './MatchupIndicator';
 const HeroMatchupAvatar = styled.img`
   height: 24px;
   margin-right: 0.5rem;
-  margin-bottom: 0.25rem;
 `;
 
-const SelectHeroCheckbox = styled(Checkbox)`
-  margin-right: 0.5rem;
-`;
+const SelectHeroCheckbox = styled(Checkbox)``;
 
 const ShowValuesCheckbox = styled(Checkbox)`
   float: right;
@@ -72,151 +69,176 @@ const HeroMatchupsTable: React.FC<{
   const disadvantageTitle = useResponsive({ short: 0, long: 1280 });
   const shouldIncludeSummary = colHeroIds?.length > 1;
 
-  const columns = [
-    ...(shouldIncludeSummary ? ['summary'] : []),
-    ...colHeroIds,
-  ].reduce<ColumnsType<typeof tableRecords[0]>>(
-    (accumulator, heroId) => {
-      const isSummary = heroId === 'summary';
-      const heroName = isSummary ? 'Overall' : heroes[heroId]?.name || '';
-      return [
-        ...accumulator,
-        {
-          key: heroId,
-          title: (
-            <span>
-              <HeroMatchupAvatar src={heroes[heroId]?.imageUrl} />
-              {heroName}
-            </span>
-          ),
-          children: [
-            {
-              key: `${heroId}.disadvantage`,
-              dataIndex: ['matchups', heroId, 'disadvantage'],
-              title: (
-                <span>
-                  {disadvantageTitle.size === 'long' ? 'Disadvantage' : 'Dis.'}
-                  &nbsp;
-                  <Tooltip
-                    overlayStyle={{ fontSize: '12px' }}
-                    placement="bottom"
-                    title="Advantage measures the matchup between two heroes regardless of their normal win rate. It is calculated by establishing their win rates both in and outside of the matchup and comparing the difference against a base win rate. The calculation is procedural and advantage / disadvantage results are not designed to be symmetrical."
-                  >
-                    <QuestionCircleFilled />
-                  </Tooltip>
-                </span>
-              ),
-              align: 'right',
-              defaultSortOrder:
-                isSummary || !shouldIncludeSummary ? 'ascend' : undefined,
-              render: (disadvantage: number, hero) =>
-                showValues ? (
-                  disadvantage ? (
-                    `${disadvantage.toFixed(2)}%`
-                  ) : (
-                    ''
-                  )
-                ) : (
-                  <MatchupIndicator
-                    value={hero.matchups[heroId]?.disadvantageTier}
-                    isHigherBetter={flipValues}
-                  ></MatchupIndicator>
-                ),
-              sorter: (a, b) =>
-                (b.matchups[heroId]?.disadvantage ?? 0) -
-                (a.matchups[heroId]?.disadvantage ?? 0),
-            },
-            {
-              key: `${heroId}.winRate`,
-              dataIndex: ['matchups', heroId, 'winRate'],
-              title: 'Win Rate',
-              align: 'right',
-              render: (winRate: number, hero) =>
-                showValues ? (
-                  <Tooltip
-                    title={
-                      winRate &&
-                      `${
-                        heroes[heroId]?.name
-                          ? heroes[heroId].name + ' has'
-                          : 'On average, the heroes you selected have'
-                      } a ${winRate.toFixed(2)}% win rate against ${hero.name}.`
-                    }
-                  >
-                    <span>{winRate ? `${winRate.toFixed(2)}%` : ''}</span>
-                  </Tooltip>
-                ) : (
-                  <MatchupIndicator
-                    value={hero.matchups[heroId]?.winRateTier}
-                    isHigherBetter={!flipValues}
-                  ></MatchupIndicator>
-                ),
-              sorter: (a, b) =>
-                (a.matchups[heroId]?.winRate ?? 0) -
-                (b.matchups[heroId]?.winRate ?? 0),
-            },
-            isSummary || !shouldIncludeSummary
-              ? {
-                  key: `${heroId}.matchesPlayed`,
-                  dataIndex: ['matchups', heroId, 'matchesPlayed'],
-                  title: 'Matches Played',
-                  align: showValues ? 'right' : 'left',
-                  render: (matchesPlayed: number, hero) =>
-                    showValues
-                      ? matchesPlayed?.toLocaleString()
-                      : Array.from(
-                          { length: hero.matchups[heroId]?.matchesPlayedTier },
-                          (v, i) => (
-                            <img
-                              key={i}
-                              src={hero.iconUrl}
-                              alt=""
-                              height="18px"
-                            />
-                          ),
-                        ),
-                  sorter: (a, b) =>
-                    (a.matchups[heroId]?.matchesPlayed ?? 0) -
-                    (b.matchups[heroId]?.matchesPlayed ?? 0),
-                }
-              : {},
-          ],
-        },
-      ];
-    },
-    [
-      {
-        key: 'name',
-        dataIndex: 'name',
-        title: 'Hero',
-        fixed: 'left',
-        render: (name: string, hero) => (
-          <div style={{ whiteSpace: 'nowrap' }}>
-            {onSelectHeroes && (
-              <SelectHeroCheckbox
-                checked={selectedHeroIds.includes(hero.id)}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setSelectedHeroIds([...selectedHeroIds, hero.id]);
-                  } else {
-                    setSelectedHeroIds(
-                      selectedHeroIds.filter((heroId) => heroId !== hero.id),
-                    );
-                  }
-                }}
-              ></SelectHeroCheckbox>
-            )}
+  const heroNameWhiteSpace = useResponsive({ normal: 0, nowrap: 1280 });
+
+  const fixedColumns: ColumnsType<typeof tableRecords[0]> = [
+    {
+      key: 'name',
+      dataIndex: 'name',
+      title: 'Hero',
+      fixed: 'left',
+      render: (name: string, hero) => (
+        <div
+          style={{
+            whiteSpace: 'nowrap',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <div>
             <HeroMatchupAvatar src={hero.imageUrl} alt="" />
-            <Link to={`/heroes/${hero.id}`} target="_blank">
+          </div>
+          <div
+            style={{ whiteSpace: heroNameWhiteSpace.size, fontSize: '0.8rem' }}
+          >
+            <Link
+              to={`/heroes/${hero.id}`}
+              target="_blank"
+              style={{ color: '#17BEBB' }}
+            >
               {name}
             </Link>
           </div>
+        </div>
+      ),
+      align: 'left',
+      sorter: (a, b) => a.name.localeCompare(b.name),
+    },
+  ];
+  if (onSelectHeroes) {
+    fixedColumns.splice(0, 0, {
+      key: 'selectionCheckbox',
+      dataIndex: 'id',
+      title: '',
+      fixed: 'left',
+      render: (_, hero) => (
+        <SelectHeroCheckbox
+          checked={selectedHeroIds.includes(hero.id)}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setSelectedHeroIds([...selectedHeroIds, hero.id]);
+            } else {
+              setSelectedHeroIds(
+                selectedHeroIds.filter((heroId) => heroId !== hero.id),
+              );
+            }
+          }}
+        ></SelectHeroCheckbox>
+      ),
+    });
+  }
+
+  const columns = [
+    ...(shouldIncludeSummary ? ['summary'] : []),
+    ...colHeroIds,
+  ].reduce<ColumnsType<typeof tableRecords[0]>>((accumulator, heroId) => {
+    const isSummary = heroId === 'summary';
+    const heroName = isSummary ? 'Overall' : heroes[heroId]?.name || '';
+    return [
+      ...accumulator,
+      {
+        key: heroId,
+        title: (
+          <span>
+            <HeroMatchupAvatar src={heroes[heroId]?.imageUrl} />
+            {heroName}
+          </span>
         ),
-        align: 'left',
-        sorter: (a, b) => a.name.localeCompare(b.name),
+        children: [
+          {
+            key: `${heroId}.disadvantage`,
+            dataIndex: ['matchups', heroId, 'disadvantage'],
+            title: (
+              <span>
+                {disadvantageTitle.size === 'long' ? 'Disadvantage' : 'Dis.'}
+                &nbsp;
+                <Tooltip
+                  overlayStyle={{ fontSize: '12px' }}
+                  placement="bottom"
+                  title="Advantage measures the matchup between two heroes regardless of their normal win rate. It is calculated by establishing their win rates both in and outside of the matchup and comparing the difference against a base win rate. The calculation is procedural and advantage / disadvantage results are not designed to be symmetrical."
+                >
+                  <QuestionCircleFilled />
+                </Tooltip>
+              </span>
+            ),
+            align: 'right',
+            defaultSortOrder:
+              isSummary || !shouldIncludeSummary ? 'ascend' : undefined,
+            render: (disadvantage: number, hero) =>
+              showValues ? (
+                disadvantage ? (
+                  `${disadvantage.toFixed(2)}%`
+                ) : (
+                  ''
+                )
+              ) : (
+                <MatchupIndicator
+                  value={hero.matchups[heroId]?.disadvantageTier}
+                  isHigherBetter={flipValues}
+                ></MatchupIndicator>
+              ),
+            sorter: (a, b) =>
+              (b.matchups[heroId]?.disadvantage ?? 0) -
+              (a.matchups[heroId]?.disadvantage ?? 0),
+          },
+          {
+            key: `${heroId}.winRate`,
+            dataIndex: ['matchups', heroId, 'winRate'],
+            title: 'Win Rate',
+            align: 'right',
+            render: (winRate: number, hero) =>
+              showValues ? (
+                <Tooltip
+                  title={
+                    winRate &&
+                    `${
+                      heroes[heroId]?.name
+                        ? heroes[heroId].name + ' has'
+                        : 'On average, the heroes you selected have'
+                    } a ${winRate.toFixed(2)}% win rate against ${hero.name}.`
+                  }
+                >
+                  <span>{winRate ? `${winRate.toFixed(2)}%` : ''}</span>
+                </Tooltip>
+              ) : (
+                <MatchupIndicator
+                  value={hero.matchups[heroId]?.winRateTier}
+                  isHigherBetter={!flipValues}
+                ></MatchupIndicator>
+              ),
+            sorter: (a, b) =>
+              (a.matchups[heroId]?.winRate ?? 50) -
+              (b.matchups[heroId]?.winRate ?? 50),
+          },
+          isSummary || !shouldIncludeSummary
+            ? {
+                key: `${heroId}.matchesPlayed`,
+                dataIndex: ['matchups', heroId, 'matchesPlayed'],
+                title: 'Matches Played',
+                align: showValues ? 'right' : 'left',
+                render: (matchesPlayed: number, hero) =>
+                  showValues
+                    ? matchesPlayed?.toLocaleString()
+                    : Array.from(
+                        { length: hero.matchups[heroId]?.matchesPlayedTier },
+                        (v, i) => (
+                          <img
+                            key={i}
+                            src={hero.iconUrl}
+                            alt=""
+                            height="18px"
+                          />
+                        ),
+                      ),
+                sorter: (a, b) =>
+                  (a.matchups[heroId]?.matchesPlayed ?? 0) -
+                  (b.matchups[heroId]?.matchesPlayed ?? 0),
+              }
+            : {},
+        ],
       },
-    ],
-  );
+    ];
+  }, fixedColumns);
 
   return (
     <div>
