@@ -1,16 +1,17 @@
+A Dota 2 Tool for suggesting new heroes to learn based on weaknesses of your existing hero pool.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+It is deployed using Vercel in this URL https://toadstool.now.sh/. 
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `now dev`
 
-Runs the app in the development mode.<br />
+Runs the app (both frontend and backend) in development mode.<br/>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
 
 ### `npm test`
 
