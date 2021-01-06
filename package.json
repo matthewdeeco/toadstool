@@ -20,7 +20,7 @@
     "@types/redux-thunk": "^2.1.0",
     "@types/styled-components": "^5.0.1",
     "antd": "^4.1.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "node-sass": "^4.13.1",
     "normalize-scss": "^7.0.1",
     "qs": "^6.9.3",
