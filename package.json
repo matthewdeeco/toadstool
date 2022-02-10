@@ -21,7 +21,7 @@
     "@types/styled-components": "^5.0.1",
     "antd": "^4.1.4",
     "axios": "^0.19.2",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "normalize-scss": "^7.0.1",
     "qs": "^6.9.3",
     "react": "^16.13.1",
